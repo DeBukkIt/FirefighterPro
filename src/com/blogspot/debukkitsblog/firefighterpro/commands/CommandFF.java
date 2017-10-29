@@ -1,7 +1,5 @@
 package com.blogspot.debukkitsblog.firefighterpro.commands;
 
-import java.util.List;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -37,29 +35,35 @@ public class CommandFF implements CommandExecutor {
 		if(sender instanceof Player) {
 			Player player = (Player) sender;
 			
+			// ROGER
 			if(args[0].equalsIgnoreCase("roger")) {
+				plugin.getCurrentMission().roger(player);
 				
-				
+			// EQUIP
 			} else if(args[0].equalsIgnoreCase("equip")) {
-				
-				
+				if(plugin.getCurrentMission().hasBeenAtLocation(player)) {
+					plugin.getCurrentMission().equip(player);
+				} else {
+					player.sendMessage(Messages.format(Messages.ERROR_NOT_PART_OF_MISSION));
+				}
+			
+			// RESPOND
 			} else if(args[0].equalsIgnoreCase("respond")) {
+				plugin.getCurrentMission().respond(player);
 				
-				 
+			} else if(args[0].equalsIgnoreCase("quit")) {
+				plugin.getCurrentMission().quit(player);
+				
+			} else {
+				return false;
 			}
 			
+		} else {
+			sender.sendMessage(Messages.format(Messages.ERROR_COMMAND_NO_CONSOLE));
+			return true;
 		}
 
-		return false;
-	}
-	
-	private void informDispatchers(String message) {
-		List<Player> dispatchers = plugin.getFFConfig().getDispatchers();
-		if (dispatchers != null) {
-			for (Player dispatcher : dispatchers) {
-				dispatcher.sendMessage(Messages.format(message));
-			}
-		}
+		return true;
 	}
 
 }

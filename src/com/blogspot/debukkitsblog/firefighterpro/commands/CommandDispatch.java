@@ -30,9 +30,16 @@ public class CommandDispatch implements CommandExecutor {
 		}
 		
 		// CASE 2: Multiple arguments
+		// -end indicates the end of the whole mission, aborting everything else
+		if(args[0].equalsIgnoreCase("-end")) {
+			plugin.getCurrentMission().end();
+			sender.sendMessage(Messages.format(Messages.MISSION_ENDED));
+			return true;
+		}
+		
 		List<String> units = new ArrayList<String>(3);
 		String additionalMessage = "";
-		for(int i = 0; i < args.length; i++) {
+		for(int i = 0; i < args.length; i++) {			
 			// every argument is another unit, which should receive the alarm
 			if(!args[i].equalsIgnoreCase("-m")) {
 				if(!plugin.getFFConfig().unitExist(args[i])) {

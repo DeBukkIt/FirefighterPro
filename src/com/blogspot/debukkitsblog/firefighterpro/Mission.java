@@ -1,11 +1,17 @@
 package com.blogspot.debukkitsblog.firefighterpro;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class Mission {
 	
@@ -16,18 +22,23 @@ public class Mission {
 	public static final int EVENT_MISSION_END = 4;
 	
 	private FirefighterPro plugin;
-	
-	private String[] timeStamps;
+
+	private Player callingCivilian;
 	private String emergencyMessage;
 	private Location location;
-	private Player callingCivilian;
 	private Player dispatcher;
+	
+	private boolean isOver;
+	private String[] timeStamps;		
+	private int manpower;
+	private HashMap<UUID, ItemStack[]> firefightersEquipped;
 	
 	public Mission(FirefighterPro plugin, String emergencyMessage, Location location, Player callingCivilian) {
 		this.plugin = plugin;
 		this.emergencyMessage = emergencyMessage;
 		this.location = location;
 		this.callingCivilian = callingCivilian;
+		this.firefightersEquipped = new HashMap<UUID, ItemStack[]>();
 		
 		this.dispatcher = null;
 		// Index	0		1			2		3		4
@@ -74,11 +85,74 @@ public class Mission {
 	
 	public void roger(Player rogeringFirefighter) {
 		this.timeStamps[2] = currentTime();
-		callingCivilian.sendMessage(Messages.format(""));
+		manpower++;
+		// Teleport the firefighter
+		rogeringFirefighter.teleport(plugin.getFFConfig().getStationLocation());
+		// Notify the civilian waiting for help
+		if(callingCivilian != null) callingCivilian.sendMessage(Messages.format(ChatColor.GREEN + rogeringFirefighter.getDisplayName() + ChatColor.WHITE + " " + Messages.ALARM_INFO_FIREFIGHTER_ROGERED));
+		// Notify the dispatcher who 
+		if(dispatcher != null) dispatcher.sendMessage(Messages.format(ChatColor.GREEN + rogeringFirefighter.getDisplayName() + ChatColor.WHITE + " " + Messages.DISPATCH_FIREFIGHTER_ROGERED));
+		// Notify the firefighter him-/herself that the command was successful
+		rogeringFirefighter.sendMessage(Messages.format(ChatColor.GREEN + rogeringFirefighter.getDisplayName() + ChatColor.WHITE + " " + Messages.DISPATCH_FIREFIGHTER_ROGERED));
+	}
+	
+	public void equip(Player equippingFirefighter) {
+		// load equipment
+		ArrayList<ItemStack> equipment = plugin.getFFConfig().getEquipment();
+		if(equipment != null) {
+			// save and empty inventory
+			firefightersEquipped.put(equippingFirefighter.getUniqueId(), equippingFirefighter.getInventory().getContents());
+			equippingFirefighter.getInventory().clear();
+			// insert equipment
+			for(int i = 0; i < equipment.size(); i++) {
+				equippingFirefighter.getInventory().setItem(i, equipment.get(i));
+			}
+			equippingFirefighter.sendMessage(Messages.format(Messages.FIREFIGHTER_EQUIPPED));
+		} else {
+			equippingFirefighter.sendMessage(Messages.format(Messages.ERROR_NO_EQUIPMENT_SET));
+		}		
+	}
+	
+	public void respond(Player respondingFirefighter) {
+		// teleport the firefighter to the site
+		respondingFirefighter.teleport(location);
+		// confirm the responding to him-/herself and the dispatcher
+		respondingFirefighter.sendMessage(Messages.format(respondingFirefighter.getDisplayName() + " " + Messages.FIREFIGHTER_RESPONDED));
+		if(dispatcher != null) dispatcher.sendMessage(Messages.format(respondingFirefighter.getDisplayName() + " " + Messages.FIREFIGHTER_RESPONDED));
+		// inform the calling civilian
+		if(callingCivilian != null) callingCivilian.sendMessage(Messages.format(Messages.ALARM_INFO_FIREFIGHTER_RESPONDED));
+	}
+	
+	public void quit(Player quittingFirefighter) {		
+		// confirm the quitting to the firefighter him-/herself and the dispatcher
+		quittingFirefighter.sendMessage(Messages.format(ChatColor.RED + quittingFirefighter.getDisplayName() + ChatColor.WHITE + " " + Messages.FIREFIGHTER_QUIT_MISSION));
+		if(dispatcher != null) dispatcher.sendMessage(Messages.format(ChatColor.RED + quittingFirefighter.getDisplayName() + ChatColor.WHITE + " " + Messages.FIREFIGHTER_QUIT_MISSION));
+		// restore the inventory
+		quittingFirefighter.getInventory().setContents(firefightersEquipped.get(quittingFirefighter.getUniqueId()));
+		quittingFirefighter.sendMessage(Messages.format(Messages.FIREFIGHTER_INVENTORY_RESTORED));
+	}	
+	
+	public void end() {
+		// mark the mission as over
+		isOver = true;
+		// send every firefighter who equipped for this mission a message
+		for(UUID id : firefightersEquipped.keySet()) {
+			Player pl = Bukkit.getPlayer(id);
+			if(pl != null) pl.sendMessage(Messages.format(Messages.MISSION_ENDED));
+		}
+		if(dispatcher != null) dispatcher.sendMessage(Messages.format(Messages.MISSION_ENDED));
+	}
+	
+	public boolean hasBeenAtLocation(Player player) {
+		return firefightersEquipped.containsKey(player.getUniqueId());
 	}
 	
 	private String currentTime() {
 		return new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(new Date());
+	}
+	
+	public boolean isOver() {
+		return this.isOver;
 	}
 
 	public String getEmergencyMessage() {
@@ -95,6 +169,10 @@ public class Mission {
 
 	public Player getDispatcher() {
 		return dispatcher;
+	}
+	
+	public int getManpower() {
+		return manpower;
 	}
 
 	public String getTimestamp(int event) {

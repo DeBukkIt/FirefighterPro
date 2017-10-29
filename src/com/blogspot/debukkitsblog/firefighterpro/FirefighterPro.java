@@ -2,7 +2,7 @@ package com.blogspot.debukkitsblog.firefighterpro;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.blogspot.debukkitsblog.firefighterpro.commands.CommandAlarm;
+import com.blogspot.debukkitsblog.firefighterpro.commands.*;
 
 public class FirefighterPro extends JavaPlugin {
 	
@@ -16,7 +16,7 @@ public class FirefighterPro extends JavaPlugin {
 		config = new Config(this, "config.yml");
 		Messages.initMessages();
 		
-		setCommandExecutors();		
+		registerCommandExecutors();		
 	}
 	
 	@Override
@@ -24,8 +24,10 @@ public class FirefighterPro extends JavaPlugin {
 		super.onDisable();
 	}
 	
-	private void setCommandExecutors() {
+	private void registerCommandExecutors() {
 		getCommand("alarm").setExecutor(new CommandAlarm(this));
+		getCommand("ff").setExecutor(new CommandFF(this));
+		getCommand("ffdispatch").setExecutor(new CommandDispatch(this));
 	}
 	
 	public Config getFFConfig() {

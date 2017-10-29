@@ -22,13 +22,20 @@ public class CommandAlarm implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-			
+		
 		if(sender instanceof Player) {
 			Player playerSender = (Player) sender;
+			
+			// Only one mission at a time is permitted
+			if(!plugin.getCurrentMission().isOver()) {
+				sender.sendMessage(Messages.format(Messages.ERROR_FIRE_DEPT_NOT_AVAILABLE));
+				return true;
+			}
 			
 			if(args.length == 0) {
 				// No alarm message provided
 				Mission mission = new Mission(plugin, Messages.ALARM_MESSAGE_CONTENT_DEFAULT.getMessage(), playerSender.getLocation(), playerSender);
+				plugin.setCurrentMission(mission);
 				broadcastAlarm(mission);
 			} else {
 				// Alarm message provided in args
@@ -37,7 +44,8 @@ public class CommandAlarm implements CommandExecutor {
 					message += word + " ";
 				}
 				Mission mission = new Mission(plugin, message, playerSender.getLocation(), playerSender);
-				broadcastAlarm(mission);
+				plugin.setCurrentMission(mission);
+				broadcastAlarm(mission);				
 			}
 			
 			playerSender.sendMessage(Messages.format(Messages.ALARM_MESSAGE_FD_INFORMED));
