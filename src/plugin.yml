@@ -18,8 +18,8 @@ commands:
      ffmanage:
           description: Manages a fire department
           permission: ffpro.manager
-          usage: /<command> (<setStation>)|(<setEquipment> <item1> [<amount>] [<item2> [<amount>]]...)|(<setAutodispatch> true|false)|(<firefighterAdd|firefighterRemove> <firefighter> <unit>)|(<unitAdd|unitRemove> <unit>)
+          usage: /<command> (<setStation>)|(<setEquipment> <item1> [<amount>] [<item2> [<amount>]]...)|(<setAutodispatch> true|false)|(<firefighterAdd|firefighterRemove> <firefighter> <unit>)|(<dispatcherAdd|dispatcherRemove> <dispatcher>)|(<unitAdd|unitRemove> <unit>)
      ffdispatch:
           description: Reacts to a call of a civilian in danger
-          permission: ffpro.call
+          permission: ffpro.dispatcher
           usage: /<command> [<unit1> [<unit2> [...]]] [-m <infoMessage>]

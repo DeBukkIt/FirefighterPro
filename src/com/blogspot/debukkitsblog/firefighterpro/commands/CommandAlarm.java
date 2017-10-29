@@ -1,4 +1,4 @@
-package com.blogspot.debukkitsblog.firefighterpro;
+package com.blogspot.debukkitsblog.firefighterpro.commands;
 
 import java.util.List;
 
@@ -7,6 +7,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import com.blogspot.debukkitsblog.firefighterpro.FirefighterPro;
+import com.blogspot.debukkitsblog.firefighterpro.Messages;
+import com.blogspot.debukkitsblog.firefighterpro.Mission;
 
 public class CommandAlarm implements CommandExecutor {
 

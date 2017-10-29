@@ -10,7 +10,9 @@ public enum Messages {
 	ALARM_MESSAGE_DISPATCHER_HELP,
 	ALARM_MESSAGE_FIREFIGHTER_HELP_ROGER,
 	INFO_FIRST_FIREFIGHTER_EN_ROUTE,
-	ERROR_COMMAND_NO_CONSOLE;
+	ERROR_COMMAND_NO_CONSOLE,
+	ERROR_DISPATCH_UNIT_NOT_EXIST,
+	DISPATCH_UNITS_DISPATCHED;
 	
 	private String message;
 	
@@ -23,6 +25,8 @@ public enum Messages {
 		ALARM_MESSAGE_FIREFIGHTER_HELP_ROGER.setMessage("Use " + ChatColor.GREEN + "/ff roger" + ChatColor.WHITE + " to confirm the alarm!");
 		INFO_FIRST_FIREFIGHTER_EN_ROUTE.setMessage("The first of our brave firefighters confirmed your emergency alarm. He is en route to the fire station now!");
 		ERROR_COMMAND_NO_CONSOLE.setMessage("This command can only be sent by a player");
+		ERROR_DISPATCH_UNIT_NOT_EXIST.setMessage("does not exist. Dispatch cancelled. Edit your command first!");
+		DISPATCH_UNITS_DISPATCHED.setMessage("firefighters successfully dispatched.");
 	}
 	
 	private void setMessage(String msg) {

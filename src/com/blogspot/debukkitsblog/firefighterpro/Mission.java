@@ -36,7 +36,7 @@ public class Mission {
 		this.timeStamps[0] = currentTime();
 	}
 	
-	public int dispatch(String unitName) {
+	public int dispatch(String unitName, String additionalMessage) {
 		// check whether unit exists
 		if(plugin.getFFConfig().unitExist(unitName)) {
 			// get member list of the unit
@@ -47,15 +47,17 @@ public class Mission {
 					firefighter.sendMessage(Messages.format(Messages.ALARM_MESSAGE_INTRO));
 					firefighter.sendMessage(Messages.format(getCallingCivilian().getDisplayName() + ": " + getEmergencyMessage()));
 					firefighter.sendMessage(Messages.format("@ " + location.getWorld() + ", (" + location.getBlockX() + "|" + location.getBlockY() + "|" + location.getBlockZ() + ")"));
+					firefighter.sendMessage(Messages.format(additionalMessage));
 				}
-				this.timeStamps[1] = currentTime();
+				if(this.timeStamps[1] == null) this.timeStamps[1] = currentTime();
+				
 				return firefighters.size();
 			}
 		}
 		return -1; // if the unit does not exist
 	}
 	
-	public void dispatchAuto() {
+	public int dispatchAuto() {
 		this.timeStamps[1] = currentTime();
 		List<Player> firefighters = plugin.getFFConfig().getFirefighters();
 		// get member list of the unit
@@ -67,6 +69,7 @@ public class Mission {
 				firefighter.sendMessage(Messages.format(Messages.ALARM_MESSAGE_FIREFIGHTER_HELP_ROGER));
 			}
 		}
+		return firefighters.size();
 	}
 	
 	public void roger(Player rogeringFirefighter) {

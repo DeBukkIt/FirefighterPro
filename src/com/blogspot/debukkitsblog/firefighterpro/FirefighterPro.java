@@ -2,6 +2,8 @@ package com.blogspot.debukkitsblog.firefighterpro;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.blogspot.debukkitsblog.firefighterpro.commands.CommandAlarm;
+
 public class FirefighterPro extends JavaPlugin {
 	
 	private Mission currentMission;
