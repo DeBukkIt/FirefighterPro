@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -50,37 +49,23 @@ public class Mission {
 	public int dispatch(String unitName, String additionalMessage) {
 		// check whether unit exists
 		if(plugin.getFFConfig().unitExist(unitName)) {
-			// get member list of the unit
-			List<Player> firefighters = plugin.getFFConfig().getFirefightersInUnit(unitName);
-			if (firefighters != null) {
-				// send Message to every member
-				for (Player firefighter : firefighters) {
-					firefighter.sendMessage(Messages.format(Messages.ALARM_MESSAGE_INTRO));
-					firefighter.sendMessage(Messages.format(getCallingCivilian().getDisplayName() + ": " + getEmergencyMessage()));
-					firefighter.sendMessage(Messages.format("@ " + location.getWorld() + ", (" + location.getBlockX() + "|" + location.getBlockY() + "|" + location.getBlockZ() + ")"));
-					firefighter.sendMessage(Messages.format(additionalMessage));
-				}
-				if(this.timeStamps[1] == null) this.timeStamps[1] = currentTime();
-				
-				return firefighters.size();
-			}
+			// remember timestamp for statistics
+			if(this.timeStamps[1] == null) this.timeStamps[1] = currentTime();
+			// send message to all members of the unit
+			plugin.getBroadcaster().broadcastToUnit(unitName, Messages.format(Messages.ALARM_MESSAGE_INTRO));
+			plugin.getBroadcaster().broadcastToUnit(unitName, Messages.format(getCallingCivilian().getDisplayName() + ": " + getEmergencyMessage()));
+			plugin.getBroadcaster().broadcastToUnit(unitName, Messages.format("@ " + location.getWorld() + ", (" + location.getBlockX() + "|" + location.getBlockY() + "|" + location.getBlockZ() + ")"));
+			return plugin.getBroadcaster().broadcastToUnit(unitName, Messages.format(additionalMessage));
 		}
 		return -1; // if the unit does not exist
 	}
 	
-	public int dispatchAuto() {
-		this.timeStamps[1] = currentTime();
-		List<Player> firefighters = plugin.getFFConfig().getFirefighters();
-		// get member list of the unit
-		if (firefighters != null) {
-			// send Message to every member
-			for (Player firefighter : firefighters) {
-				firefighter.sendMessage(Messages.format(Messages.ALARM_MESSAGE_INTRO));
-				firefighter.sendMessage(Messages.format(getCallingCivilian().getDisplayName() + ": " + getEmergencyMessage() + " @ " + location.getWorld().getName() + " ( " + location.getBlockX() + " | " + location.getBlockY() + " | " + location.getBlockZ() + " )"));
-				firefighter.sendMessage(Messages.format(Messages.ALARM_MESSAGE_FIREFIGHTER_HELP_ROGER));
-			}
-		}
-		return firefighters.size();
+	public int dispatchAuto() {		
+		if(this.timeStamps[1] == null) this.timeStamps[1] = currentTime();
+		// send message to all firefighters
+		plugin.getBroadcaster().broadcastToFirefighters(Messages.format(Messages.ALARM_MESSAGE_INTRO));
+		plugin.getBroadcaster().broadcastToFirefighters(Messages.format(getCallingCivilian().getDisplayName() + ": " + getEmergencyMessage() + " @ " + location.getWorld().getName() + " ( " + location.getBlockX() + " | " + location.getBlockY() + " | " + location.getBlockZ() + " )"));
+		return plugin.getBroadcaster().broadcastToFirefighters(Messages.format(Messages.ALARM_MESSAGE_FIREFIGHTER_HELP_ROGER));
 	}
 	
 	public void roger(Player rogeringFirefighter) {
@@ -91,9 +76,9 @@ public class Mission {
 		// Notify the civilian waiting for help
 		if(callingCivilian != null) callingCivilian.sendMessage(Messages.format(ChatColor.GREEN + rogeringFirefighter.getDisplayName() + ChatColor.WHITE + " " + Messages.ALARM_INFO_FIREFIGHTER_ROGERED));
 		// Notify the dispatcher who 
-		if(dispatcher != null) dispatcher.sendMessage(Messages.format(ChatColor.GREEN + rogeringFirefighter.getDisplayName() + ChatColor.WHITE + " " + Messages.DISPATCH_FIREFIGHTER_ROGERED));
+		if(dispatcher != null) dispatcher.sendMessage(Messages.format(ChatColor.GREEN + rogeringFirefighter.getDisplayName() + ChatColor.WHITE + ": " + Messages.DISPATCH_FIREFIGHTER_ROGERED));
 		// Notify the firefighter him-/herself that the command was successful
-		rogeringFirefighter.sendMessage(Messages.format(ChatColor.GREEN + rogeringFirefighter.getDisplayName() + ChatColor.WHITE + " " + Messages.DISPATCH_FIREFIGHTER_ROGERED));
+		rogeringFirefighter.sendMessage(Messages.format(ChatColor.GREEN + rogeringFirefighter.getDisplayName() + ChatColor.WHITE + ": " + Messages.DISPATCH_FIREFIGHTER_ROGERED));
 	}
 	
 	public void equip(Player equippingFirefighter) {
@@ -117,7 +102,7 @@ public class Mission {
 		// teleport the firefighter to the site
 		respondingFirefighter.teleport(location);
 		// confirm the responding to him-/herself and the dispatcher
-		respondingFirefighter.sendMessage(Messages.format(respondingFirefighter.getDisplayName() + " " + Messages.FIREFIGHTER_RESPONDED));
+		respondingFirefighter.sendMessage(ChatColor.GREEN + Messages.format(respondingFirefighter.getDisplayName() + ChatColor.WHITE + " " + Messages.FIREFIGHTER_RESPONDED));
 		if(dispatcher != null) dispatcher.sendMessage(Messages.format(respondingFirefighter.getDisplayName() + " " + Messages.FIREFIGHTER_RESPONDED));
 		// inform the calling civilian
 		if(callingCivilian != null) callingCivilian.sendMessage(Messages.format(Messages.ALARM_INFO_FIREFIGHTER_RESPONDED));
@@ -135,12 +120,18 @@ public class Mission {
 	public void end() {
 		// mark the mission as over
 		isOver = true;
-		// send every firefighter who equipped for this mission a message
+		// send end message to every firefighter and dispatcher
+		plugin.getBroadcaster().broadcastToDispatchers(Messages.format(Messages.INFO_HEADLINE_DISPATCHERS));
+		plugin.getBroadcaster().broadcastToDispatchers(Messages.format(Messages.MISSION_ENDED));
+		plugin.getBroadcaster().broadcastToFirefighters(Messages.format(Messages.INFO_HEADLINE_FIREFIGHTERS_ALL));
+		plugin.getBroadcaster().broadcastToFirefighters(Messages.format(Messages.MISSION_ENDED));
+		// remove all firefighters from this mission, give them their inventory back
 		for(UUID id : firefightersEquipped.keySet()) {
-			Player pl = Bukkit.getPlayer(id);
-			if(pl != null) pl.sendMessage(Messages.format(Messages.MISSION_ENDED));
+			Player pl = Bukkit.getServer().getPlayer(id);
+			if(pl.isOnline()) {
+				quit(pl);
+			}
 		}
-		if(dispatcher != null) dispatcher.sendMessage(Messages.format(Messages.MISSION_ENDED));
 	}
 	
 	public boolean hasBeenAtLocation(Player player) {

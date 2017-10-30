@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -30,10 +32,11 @@ public class Config {
 		configData.addDefault("firedepartment.location", plugin.getServer().getWorlds().get(0).getSpawnLocation());
 		
 		ArrayList<String> equipmentItems = new ArrayList<String>(3);
-		equipmentItems.add("65 16");
-		equipmentItems.add("326 5");
-		equipmentItems.add("258 1");
+		equipmentItems.add(Material.LADDER + " 16");
+		equipmentItems.add(Material.WATER_BUCKET + " 5");
+		equipmentItems.add(Material.IRON_AXE + " 1");
 		configData.addDefault("firedepartment.equipment", equipmentItems);
+		configData.addDefault("firedepartment.signs.fontcolor", '4');
 		configData.addDefault("firedepartment.personnel.members", new ArrayList<String>());
 		configData.addDefault("firedepartment.personnel.dispatchers", new ArrayList<String>());
 		configData.addDefault("firedepartment.dispatch.autoDispatch", false);
@@ -44,10 +47,23 @@ public class Config {
 		configData.options().copyDefaults(true);
 		plugin.saveConfig();
 	}
-
+	
+	public ChatColor getSignFontColor() {
+		return ChatColor.getByChar((Character) configData.get("firedepartment.signs.fontcolor"));
+	}
+	
 	@SuppressWarnings("unchecked")
 	public ArrayList<ItemStack> getEquipment() {
-		return (ArrayList<ItemStack>) configData.get("firedepartment.equipment");
+		ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+		for(String itemString : (ArrayList<String>) configData.get("firedepartment.equipment")) {
+			items.add(new ItemStack(Material.getMaterial(itemString.split(" ")[0]), Integer.parseInt(itemString.split(" ")[1])));
+		}
+		return items;
+	}
+	
+	public void setAutodispatch(boolean autodispatch) {
+		configData.set("firedepartment.dispatch.autoDispatch", autodispatch);
+		plugin.saveConfig();
 	}
 	
 	public boolean getAutodispatch() {

@@ -1,7 +1,5 @@
 package com.blogspot.debukkitsblog.firefighterpro.commands;
 
-import java.util.List;
-
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -64,16 +62,11 @@ public class CommandAlarm implements CommandExecutor {
 			mission.dispatchAuto();
 		} else {
 			// Inform only the dispatchers
-			List<Player> dispatchers = plugin.getFFConfig().getDispatchers();
-			for(Player player : dispatchers) {
-				if(player.isOnline()) {
-					Location location = mission.getLocation();
-					player.sendMessage(Messages.format(Messages.ALARM_MESSAGE_INTRO));
-					player.sendMessage(Messages.format(mission.getCallingCivilian().getDisplayName() + ": " + mission.getEmergencyMessage()));
-					player.sendMessage(Messages.format("@ " + location.getWorld() + ", (" + location.getBlockX() + "|" + location.getBlockY() + "|" + location.getBlockZ() + ")"));
-					player.sendMessage(Messages.format(Messages.ALARM_MESSAGE_DISPATCHER_HELP));
-				}
-			}
+			Location location = mission.getLocation();
+			plugin.getBroadcaster().broadcastToDispatchers(Messages.format(Messages.ALARM_MESSAGE_INTRO));
+			plugin.getBroadcaster().broadcastToDispatchers(Messages.format(mission.getCallingCivilian().getDisplayName() + ": " + mission.getEmergencyMessage()));
+			plugin.getBroadcaster().broadcastToDispatchers(Messages.format("@ " + location.getWorld() + ", (" + location.getBlockX() + "|" + location.getBlockY() + "|" + location.getBlockZ() + ")"));
+			plugin.getBroadcaster().broadcastToDispatchers(Messages.format(Messages.ALARM_MESSAGE_DISPATCHER_HELP));			
 		}	
 		
 	}

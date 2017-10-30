@@ -24,14 +24,16 @@ public class CommandDispatch implements CommandExecutor {
 		
 		// CASE 0: Currently no mission to dispatch units for
 		if(plugin.getCurrentMission() == null || plugin.getCurrentMission().isOver()) {
-			sender.sendMessage(Messages.format(Messages.ERROR_NO_MISSION_CURRENTLY));
+			sender.sendMessage(Messages.format(Messages.ERROR_NO_MISSION_CURRENTLY_DISPATCH));
 			return true;
 		}
 		
 		// CASE 1: No argument: Dispatch using autodispatch mechanic
 		if(args.length == 0) {
+			// dispatch all firefighters
 			int resultAmount = plugin.getCurrentMission().dispatchAuto();
-			sender.sendMessage(Messages.format(ChatColor.GREEN + String.valueOf(resultAmount) + ChatColor.WHITE + " " + Messages.DISPATCH_UNITS_DISPATCHED));
+			// inform all dispatchers (including command sender)
+			plugin.getBroadcaster().broadcastToDispatchers(Messages.format("[" + sender.getName() + "] " + ChatColor.GREEN + String.valueOf(resultAmount) + ChatColor.WHITE + " " + Messages.DISPATCH_UNITS_DISPATCHED));
 			return true;
 		}
 		

@@ -16,13 +16,21 @@ public enum Messages {
 	ERROR_DISPATCH_UNIT_NOT_EXIST,
 	ERROR_NO_EQUIPMENT_SET,
 	ERROR_NOT_PART_OF_MISSION,
-	ERROR_NO_MISSION_CURRENTLY,
+	ERROR_NO_MISSION_CURRENTLY_DISPATCH,
+	ERROR_NO_MISSION_CURRENTLY_RESPOND,
 	DISPATCH_UNITS_DISPATCHED,
 	DISPATCH_FIREFIGHTER_ROGERED,
+	INFO_HEADLINE_DISPATCHERS,
+	INFO_HEADLINE_FIREFIGHTERS_ALL,
+	INFO_HEADLINE_FIREFIGHTERS_UNIT,
 	FIREFIGHTER_EQUIPPED,
 	FIREFIGHTER_RESPONDED,
 	FIREFIGHTER_QUIT_MISSION,
 	FIREFIGHTER_INVENTORY_RESTORED,
+	MANAGER_FIRESTATION_LOCATION_SET,
+	MANAGER_FIRESTATION_LOCATION_SET_FOR_FIREFIGHTERS,
+	MANAGER_AUTODISPATCH_ON,
+	MANAGER_AUTODISPATCH_OFF,
 	MISSION_ENDED;
 	
 	private String message;
@@ -40,14 +48,22 @@ public enum Messages {
 		ERROR_COMMAND_NO_CONSOLE.setMessage("This command can only be sent by a player");
 		ERROR_DISPATCH_UNIT_NOT_EXIST.setMessage("does not exist. Dispatch cancelled. Edit your command first!");
 		ERROR_NO_EQUIPMENT_SET.setMessage("The fire brigade has unfortunately not provided any equipment. You must get along without.");
-		ERROR_NOT_PART_OF_MISSION.setMessage("You cannot quit a mission you have not been part of.");
-		ERROR_NO_MISSION_CURRENTLY.setMessage("At the moment there is no mission to dispatch units for.");
-		DISPATCH_UNITS_DISPATCHED.setMessage("firefighters successfully dispatched.");
-		DISPATCH_FIREFIGHTER_ROGERED.setMessage("roger that, en route to the fire station");
+		ERROR_NOT_PART_OF_MISSION.setMessage("You are not part of the running call and cannot use this command at the moment.");
+		ERROR_NO_MISSION_CURRENTLY_DISPATCH.setMessage("At the moment there is no mission to dispatch units for.");
+		ERROR_NO_MISSION_CURRENTLY_RESPOND.setMessage("At the moment there is no mission to roger, equip for or respond to.");
+		DISPATCH_UNITS_DISPATCHED.setMessage("firefighters dispatched.");
+		DISPATCH_FIREFIGHTER_ROGERED.setMessage("Roger that! En route to the fire station.");
+		INFO_HEADLINE_DISPATCHERS.setMessage("# Information message for all Dispatchers ++");
+		INFO_HEADLINE_FIREFIGHTERS_ALL.setMessage("# Information message for all Firefighters ++");
+		INFO_HEADLINE_FIREFIGHTERS_UNIT.setMessage("# Information message for firefighters in unit");
 		FIREFIGHTER_EQUIPPED.setMessage("You have been equipped with your most necessary equipment. You'll get your things back later using /ff quit");
 		FIREFIGHTER_RESPONDED.setMessage("has moved out and has approached the site");
 		FIREFIGHTER_QUIT_MISSION.setMessage("quit the mission and returned to base.");
 		FIREFIGHTER_INVENTORY_RESTORED.setMessage("You inventory has been restored.");
+		MANAGER_FIRESTATION_LOCATION_SET.setMessage("You set a new location for the fire station.");
+		MANAGER_FIRESTATION_LOCATION_SET_FOR_FIREFIGHTERS.setMessage("A new fire station has been set at");
+		MANAGER_AUTODISPATCH_ON.setMessage("Autodispatch has been turned on. Alarms will be dispatched to every firefighter automatically now.");
+		MANAGER_AUTODISPATCH_OFF.setMessage("Autodispatch has been turned off. A dispatcher is needed to turn an emergency call into an alarm now.");
 		MISSION_ENDED.setMessage("The mission is finished, the place of deployment has been handed over to the owner.");		
 	}
 	

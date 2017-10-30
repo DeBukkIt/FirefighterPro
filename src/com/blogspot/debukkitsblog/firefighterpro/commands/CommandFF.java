@@ -28,6 +28,7 @@ public class CommandFF implements CommandExecutor {
 		if(args[0].equalsIgnoreCase("info")) {
 			sender.sendMessage(Messages.format(plugin.getDescription().getName() + " " + plugin.getDescription().getVersion()));
 			sender.sendMessage(Messages.format("made by " + plugin.getDescription().getAuthors().get(0) + " since October 2017"));
+			// TODO Print online statistics per unit
 			return true;
 		}
 		
@@ -35,35 +36,39 @@ public class CommandFF implements CommandExecutor {
 		if(sender instanceof Player) {
 			Player player = (Player) sender;
 			
-			// ROGER
-			if(args[0].equalsIgnoreCase("roger")) {
-				plugin.getCurrentMission().roger(player);
-				
-			// EQUIP
-			} else if(args[0].equalsIgnoreCase("equip")) {
-				if(plugin.getCurrentMission().hasBeenAtLocation(player)) {
-					plugin.getCurrentMission().equip(player);
-				} else {
-					player.sendMessage(Messages.format(Messages.ERROR_NOT_PART_OF_MISSION));
-				}
-			
-			// RESPOND
-			} else if(args[0].equalsIgnoreCase("respond")) {
-				plugin.getCurrentMission().respond(player);
-				
-			} else if(args[0].equalsIgnoreCase("quit")) {
-				plugin.getCurrentMission().quit(player);
-				
+			if(plugin.getCurrentMission() == null || plugin.getCurrentMission().isOver()) {
+				player.sendMessage(Messages.format(Messages.ERROR_NO_MISSION_CURRENTLY_RESPOND));
+				return true;
 			} else {
-				return false;
+
+					// ROGER
+				if (args[0].equalsIgnoreCase("roger")) {
+					plugin.getCurrentMission().roger(player);
+
+					// EQUIP
+				} else if (args[0].equalsIgnoreCase("equip")) {
+					plugin.getCurrentMission().equip(player);
+
+					// RESPOND
+				} else if (args[0].equalsIgnoreCase("respond")) {
+					plugin.getCurrentMission().respond(player);
+
+					// QUIT
+				} else if (args[0].equalsIgnoreCase("quit")) {
+					plugin.getCurrentMission().quit(player);
+
+				} else {
+					return false;
+				}
+				
+				return true;
+				
 			}
 			
 		} else {
 			sender.sendMessage(Messages.format(Messages.ERROR_COMMAND_NO_CONSOLE));
 			return true;
 		}
-
-		return true;
 	}
 
 }
