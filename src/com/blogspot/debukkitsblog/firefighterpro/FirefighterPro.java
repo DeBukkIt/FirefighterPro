@@ -2,7 +2,10 @@ package com.blogspot.debukkitsblog.firefighterpro;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.blogspot.debukkitsblog.firefighterpro.commands.*;
+import com.blogspot.debukkitsblog.firefighterpro.commands.CommandAlarm;
+import com.blogspot.debukkitsblog.firefighterpro.commands.CommandDispatch;
+import com.blogspot.debukkitsblog.firefighterpro.commands.CommandFF;
+import com.blogspot.debukkitsblog.firefighterpro.events.FireSignEvent;
 
 public class FirefighterPro extends JavaPlugin {
 	
@@ -16,6 +19,7 @@ public class FirefighterPro extends JavaPlugin {
 		config = new Config(this, "config.yml");
 		Messages.initMessages();
 		
+		getServer().getPluginManager().registerEvents(new FireSignEvent(), this);
 		registerCommandExecutors();		
 	}
 	

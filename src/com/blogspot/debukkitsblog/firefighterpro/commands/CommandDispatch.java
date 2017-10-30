@@ -22,6 +22,12 @@ public class CommandDispatch implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
+		// CASE 0: Currently no mission to dispatch units for
+		if(plugin.getCurrentMission() == null || plugin.getCurrentMission().isOver()) {
+			sender.sendMessage(Messages.format(Messages.ERROR_NO_MISSION_CURRENTLY));
+			return true;
+		}
+		
 		// CASE 1: No argument: Dispatch using autodispatch mechanic
 		if(args.length == 0) {
 			int resultAmount = plugin.getCurrentMission().dispatchAuto();

@@ -27,7 +27,7 @@ public class CommandAlarm implements CommandExecutor {
 			Player playerSender = (Player) sender;
 			
 			// Only one mission at a time is permitted
-			if(!plugin.getCurrentMission().isOver()) {
+			if(plugin.getCurrentMission() != null && !plugin.getCurrentMission().isOver()) {
 				sender.sendMessage(Messages.format(Messages.ERROR_FIRE_DEPT_NOT_AVAILABLE));
 				return true;
 			}

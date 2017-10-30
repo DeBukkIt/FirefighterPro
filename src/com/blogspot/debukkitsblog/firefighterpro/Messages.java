@@ -16,6 +16,7 @@ public enum Messages {
 	ERROR_DISPATCH_UNIT_NOT_EXIST,
 	ERROR_NO_EQUIPMENT_SET,
 	ERROR_NOT_PART_OF_MISSION,
+	ERROR_NO_MISSION_CURRENTLY,
 	DISPATCH_UNITS_DISPATCHED,
 	DISPATCH_FIREFIGHTER_ROGERED,
 	FIREFIGHTER_EQUIPPED,
@@ -40,6 +41,7 @@ public enum Messages {
 		ERROR_DISPATCH_UNIT_NOT_EXIST.setMessage("does not exist. Dispatch cancelled. Edit your command first!");
 		ERROR_NO_EQUIPMENT_SET.setMessage("The fire brigade has unfortunately not provided any equipment. You must get along without.");
 		ERROR_NOT_PART_OF_MISSION.setMessage("You cannot quit a mission you have not been part of.");
+		ERROR_NO_MISSION_CURRENTLY.setMessage("At the moment there is no mission to dispatch units for.");
 		DISPATCH_UNITS_DISPATCHED.setMessage("firefighters successfully dispatched.");
 		DISPATCH_FIREFIGHTER_ROGERED.setMessage("roger that, en route to the fire station");
 		FIREFIGHTER_EQUIPPED.setMessage("You have been equipped with your most necessary equipment. You'll get your things back later using /ff quit");
