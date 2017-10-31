@@ -49,7 +49,7 @@ public class Config {
 	}
 	
 	public ChatColor getSignFontColor() {
-		return ChatColor.getByChar((Character) configData.get("firedepartment.signs.fontcolor"));
+		return ChatColor.getByChar(((String) configData.get("firedepartment.signs.fontcolor")).toCharArray()[0]);
 	}
 	
 	@SuppressWarnings("unchecked")
