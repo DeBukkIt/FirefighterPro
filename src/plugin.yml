@@ -6,6 +6,7 @@ authors: [DeBukkIt]
 website: http://debukkitsblog.blogspot.com
 main: com.blogspot.debukkitsblog.firefighterpro.FirefighterPro
 prefix: FFPro
+softdepend: [WorldGuard]
 commands:
      alarm:
           description: Calls the fire department in case to your location

@@ -1,21 +1,34 @@
 package com.blospot.debukkitsblog.firefighterpro.ui;
 
-import org.bukkit.scoreboard.Scoreboard;
+import java.util.List;
 
-import com.blogspot.debukkitsblog.firefighterpro.FirefighterPro;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.scoreboard.Team;
+
 import com.blogspot.debukkitsblog.firefighterpro.Mission;
 
 public class UIManager {
-
-	private FirefighterPro plugin;
 	
-	public UIManager(FirefighterPro plugin) {
-		this.plugin = plugin;
-	}
-	
-	public Scoreboard getScoreboardForMission(Mission mission) {
-		// TODO Implement UI with mission overview using scoreboard
-		return null;
+	public static Scoreboard getScoreboard(Mission mission) {
+		ScoreboardManager manager = Bukkit.getScoreboardManager();
+		Scoreboard sb = manager.getNewScoreboard();
+		
+		Team firefighters = sb.registerNewTeam("Firefighters");
+		List<Player> firefightersInMission = mission.getFirefighters();
+		for(Player firefighter : firefightersInMission) {
+			firefighters.addEntry(firefighter.getDisplayName());
+		}
+		
+		Objective obj = sb.registerNewObjective("Objective", "dummy");
+		obj.setDisplayName("Objectives");
+		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+		
+		return sb;
 	}
 	
 }

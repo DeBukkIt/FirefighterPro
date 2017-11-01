@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -11,6 +12,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import com.blospot.debukkitsblog.firefighterpro.ui.UIManager;
 
 public class Mission {
 	
@@ -51,6 +54,8 @@ public class Mission {
 		if(plugin.getFFConfig().unitExist(unitName)) {
 			// remember timestamp for statistics
 			if(this.timeStamps[1] == null) this.timeStamps[1] = currentTime();
+			// update scoreboards
+			updateScoreboards();
 			// send message to all members of the unit
 			plugin.getBroadcaster().broadcastToUnit(unitName, Messages.format(Messages.ALARM_MESSAGE_INTRO));
 			plugin.getBroadcaster().broadcastToUnit(unitName, Messages.format(getCallingCivilian().getDisplayName() + ": " + getEmergencyMessage()));
@@ -61,7 +66,10 @@ public class Mission {
 	}
 	
 	public int dispatchAuto() {		
+		// remember timestamp for statistics
 		if(this.timeStamps[1] == null) this.timeStamps[1] = currentTime();
+		// update scoreboards
+		updateScoreboards();
 		// send message to all firefighters
 		plugin.getBroadcaster().broadcastToFirefighters(Messages.format(Messages.ALARM_MESSAGE_INTRO));
 		plugin.getBroadcaster().broadcastToFirefighters(Messages.format(getCallingCivilian().getDisplayName() + ": " + getEmergencyMessage() + " @ " + location.getWorld().getName() + " ( " + location.getBlockX() + " | " + location.getBlockY() + " | " + location.getBlockZ() + " )"));
@@ -131,6 +139,23 @@ public class Mission {
 			if(pl.isOnline()) {
 				quit(pl);
 			}
+		}
+	}
+	
+	public List<Player> getFirefighters() {
+		List<Player> result = new ArrayList<Player>();
+		if(firefightersEquipped != null) {
+			for (UUID id : firefightersEquipped.keySet()) {
+				result.add(Bukkit.getServer().getPlayer(id));
+			}
+		}
+		return result;
+	}
+	
+	private void updateScoreboards() {
+		//TODO Make Scoreboards work
+		for(Player firefighter : getFirefighters()) {
+			firefighter.setScoreboard(UIManager.getScoreboard(this));
 		}
 	}
 	
