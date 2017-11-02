@@ -41,7 +41,7 @@ public class CommandManage implements CommandExecutor {
 				player.sendMessage(Messages.format(Messages.MANAGER_FIRESTATION_LOCATION_SET));
 				// inform all firefighters
 				plugin.getBroadcaster().broadcastToFirefighters(Messages.format(Messages.INFO_HEADLINE_FIREFIGHTERS_ALL));
-				plugin.getBroadcaster().broadcastToFirefighters(Messages.format(Messages.MANAGER_FIRESTATION_LOCATION_SET_FOR_FIREFIGHTERS + " " + location.getWorld() + ", (" + location.getBlockX() + "|" + location.getBlockY() + "|" + location.getBlockZ() + ")"));
+				plugin.getBroadcaster().broadcastToFirefighters(Messages.format(Messages.MANAGER_FIRESTATION_LOCATION_SET_FOR_FIREFIGHTERS + " " + location.getWorld().getName() + ", (" + location.getBlockX() + "|" + location.getBlockY() + "|" + location.getBlockZ() + ")"));
 			} else {
 				sender.sendMessage(Messages.format(Messages.ERROR_COMMAND_NO_CONSOLE));
 			}

@@ -24,3 +24,7 @@ commands:
           description: Reacts to a call of a civilian in danger
           permission: ffpro.dispatcher
           usage: /<command> ([<unit1> [<unit2> [...]]] [-m <infoMessage>]) | -end
+     ffregiontest:
+          description: Debugs the WorldGuard API
+          permission: ffpro.debug
+          usage: /<command> deny|allow

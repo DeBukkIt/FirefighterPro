@@ -14,6 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.blospot.debukkitsblog.firefighterpro.ui.UIManager;
+import com.sk89q.worldguard.domains.DefaultDomain;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class Mission {
 	
@@ -35,12 +37,16 @@ public class Mission {
 	private int manpower;
 	private HashMap<UUID, ItemStack[]> firefightersEquipped;
 	
+	private ProtectedRegion region;
+	private DefaultDomain regionOldMembers;
+	
 	public Mission(FirefighterPro plugin, String emergencyMessage, Location location, Player callingCivilian) {
 		this.plugin = plugin;
 		this.emergencyMessage = emergencyMessage;
 		this.location = location;
 		this.callingCivilian = callingCivilian;
 		this.firefightersEquipped = new HashMap<UUID, ItemStack[]>();
+		this.regionOldMembers = null;
 		
 		this.dispatcher = null;
 		// Index	0		1			2		3		4
@@ -107,6 +113,10 @@ public class Mission {
 	}
 	
 	public void respond(Player respondingFirefighter) {
+		// for not-equipped firefighters: add to the list
+		if(!firefightersEquipped.containsKey(respondingFirefighter.getUniqueId())) {
+			firefightersEquipped.put(respondingFirefighter.getUniqueId(), respondingFirefighter.getInventory().getContents());
+		}
 		// teleport the firefighter to the site
 		respondingFirefighter.teleport(location);
 		// confirm the responding to him-/herself and the dispatcher
@@ -196,6 +206,22 @@ public class Mission {
 			throw new IllegalArgumentException("Parameter must be >= 0 and <= 4");
 		}
 		return this.timeStamps[event];
+	}
+	
+	public void setRegion(ProtectedRegion region) {
+		this.region = region;
+	}
+	
+	public ProtectedRegion getRegion() {
+		return region;
+	}
+	
+	public void setRegionOldMembers(DefaultDomain oldMembers) {
+		this.regionOldMembers = oldMembers;
+	}
+	
+	public DefaultDomain getRegionOldMembers() {
+		return regionOldMembers;
 	}
 	
 }

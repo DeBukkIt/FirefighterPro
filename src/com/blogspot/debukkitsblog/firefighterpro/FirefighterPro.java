@@ -6,6 +6,7 @@ import com.blogspot.debukkitsblog.firefighterpro.commands.CommandAlarm;
 import com.blogspot.debukkitsblog.firefighterpro.commands.CommandDispatch;
 import com.blogspot.debukkitsblog.firefighterpro.commands.CommandFF;
 import com.blogspot.debukkitsblog.firefighterpro.commands.CommandManage;
+import com.blogspot.debukkitsblog.firefighterpro.commands.CommandRegionTest;
 import com.blogspot.debukkitsblog.firefighterpro.events.SignEventHandler;
 
 public class FirefighterPro extends JavaPlugin {
@@ -23,7 +24,7 @@ public class FirefighterPro extends JavaPlugin {
 		Messages.initMessages();
 		
 		getServer().getPluginManager().registerEvents(new SignEventHandler(this), this);
-		registerCommandExecutors();		
+		registerCommandExecutors();	
 	}
 	
 	@Override
@@ -36,6 +37,7 @@ public class FirefighterPro extends JavaPlugin {
 		getCommand("ff").setExecutor(new CommandFF(this));
 		getCommand("ffdispatch").setExecutor(new CommandDispatch(this));
 		getCommand("ffmanage").setExecutor(new CommandManage(this));
+		getCommand("ffregiontest").setExecutor(new CommandRegionTest(this));
 	}
 	
 	public Broadcaster getBroadcaster() {
