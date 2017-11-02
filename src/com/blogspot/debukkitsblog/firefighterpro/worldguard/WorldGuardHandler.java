@@ -5,16 +5,19 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import com.blogspot.debukkitsblog.firefighterpro.FirefighterPro;
+import com.blogspot.debukkitsblog.firefighterpro.Messages;
 import com.blogspot.debukkitsblog.firefighterpro.Mission;
 import com.sk89q.worldguard.bukkit.RegionContainer;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.managers.storage.StorageException;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class WorldGuardHandler {
@@ -89,6 +92,7 @@ public class WorldGuardHandler {
 		List<Player> players = mission.getFirefighters();
 		DefaultDomain members = region.getMembers();
 		
+		mission.setRegion(region);
 		mission.setRegionOldMembers(members);
 		
 		for(Player player : players) {
@@ -97,26 +101,26 @@ public class WorldGuardHandler {
 		}
 		System.out.println("Setting member list (size=" + members.size() + ") to region " + region.getId());
 		region.setMembers(members);
+		
+		saveRegionChanges(loc.getWorld());
 	}
 	
+	// TODO Withdrawing permission is not working yet, fix it!
 	public void setOldBuildPermissions(Location loc, Mission mission) {
 		ProtectedRegion region = mission.getRegion();
-		if(mission.getRegionOldMembers() == null) {
-			region.setMembers(new DefaultDomain());
+		if(!(mission.getRegionOldMembers() == null)) {
+			region.setMembers(mission.getRegionOldMembers());			
 		} else {
-			// TODO fix totally weird NullPointerException
-			System.out.println("Setting old build permissions...");
-			System.out.println("** FOR INFORMATION **");
-			System.out.println("is region null? :: " + region == null);
-			System.out.println("is mission null? :: " + mission == null);
-			System.out.println("is  mission.getRegionOldMembers() null? :: " + mission.getRegionOldMembers() == null);
-			System.out.println("** INFORMATION END **");
-			if(region == null || mission == null || mission.getRegionOldMembers() == null) {
-				System.out.println("Could not set old build permissions.");
-			} else {
-				region.setMembers(mission.getRegionOldMembers());
-				System.out.println("Old build permissions set.");
-			}
+			region.setMembers(new DefaultDomain());
+		}
+		saveRegionChanges(loc.getWorld());
+	}
+	
+	private void saveRegionChanges(World world) {
+		try {
+			getWorldGuard().getRegionManager(world).saveChanges();
+		} catch (StorageException e) {
+			System.err.println(Messages.format("WorldGuard could not save region changes"));
 		}
 	}
 

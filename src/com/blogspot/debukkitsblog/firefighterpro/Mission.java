@@ -123,7 +123,7 @@ public class Mission {
 		respondingFirefighter.sendMessage(ChatColor.GREEN + Messages.format(respondingFirefighter.getDisplayName() + ChatColor.WHITE + " " + Messages.FIREFIGHTER_RESPONDED));
 		if(dispatcher != null) dispatcher.sendMessage(Messages.format(respondingFirefighter.getDisplayName() + " " + Messages.FIREFIGHTER_RESPONDED));
 		// inform the calling civilian
-		if(callingCivilian != null) callingCivilian.sendMessage(Messages.format(Messages.ALARM_INFO_FIREFIGHTER_RESPONDED));
+		if(callingCivilian != null) callingCivilian.sendMessage(Messages.format(respondingFirefighter.getDisplayName() + " " + Messages.ALARM_INFO_FIREFIGHTER_RESPONDED));
 	}
 	
 	public void quit(Player quittingFirefighter) {		
