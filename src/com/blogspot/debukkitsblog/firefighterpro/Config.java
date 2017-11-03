@@ -39,11 +39,15 @@ public class Config {
 		configData.addDefault("firedepartment.signs.fontcolor", '4');
 		configData.addDefault("firedepartment.personnel.members", new ArrayList<String>());
 		configData.addDefault("firedepartment.personnel.dispatchers", new ArrayList<String>());
-		configData.addDefault("firedepartment.dispatch.autoDispatch", false);
+		configData.addDefault("firedepartment.dispatch.autoDispatch", true);
 		
+		configData.addDefault("firedepartment.units.fire-station1.name", "Station 1");
 		ArrayList<String> ids = new ArrayList<String>();
 		ids.add("3c331cf1-d8f1-417f-b3b3-0b7bc2f9b2c0");
-		configData.addDefault("firedepartment.units.station1.members", ids);
+		configData.addDefault("firedepartment.units.fire-station1.members", ids);
+		configData.addDefault("firedepartment.units.ems-central.name", "EMS Station Central");
+		configData.addDefault("firedepartment.units.ems-central.members", new ArrayList<String>());
+		
 		configData.options().copyDefaults(true);
 		plugin.saveConfig();
 	}

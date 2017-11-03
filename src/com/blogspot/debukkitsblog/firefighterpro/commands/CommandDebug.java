@@ -7,11 +7,11 @@ import org.bukkit.command.CommandSender;
 import com.blogspot.debukkitsblog.firefighterpro.FirefighterPro;
 import com.blogspot.debukkitsblog.firefighterpro.worldguard.WorldGuardHandler;
 
-public class CommandRegionTest implements CommandExecutor {
+public class CommandDebug implements CommandExecutor {
 
 	private final FirefighterPro plugin;
 	
-	public CommandRegionTest(FirefighterPro plugin) {
+	public CommandDebug(FirefighterPro plugin) {
 		this.plugin = plugin;
 	}
 

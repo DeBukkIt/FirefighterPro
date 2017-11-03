@@ -13,8 +13,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.blogspot.debukkitsblog.firefighterpro.worldguard.DefaultDomainWrapper;
 import com.blospot.debukkitsblog.firefighterpro.ui.UIManager;
-import com.sk89q.worldguard.domains.DefaultDomain;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class Mission {
@@ -38,7 +38,7 @@ public class Mission {
 	private HashMap<UUID, ItemStack[]> firefightersEquipped;
 	
 	private ProtectedRegion region;
-	private DefaultDomain regionOldMembers;
+	private DefaultDomainWrapper regionOldMembers;
 	
 	public Mission(FirefighterPro plugin, String emergencyMessage, Location location, Player callingCivilian) {
 		this.plugin = plugin;
@@ -216,11 +216,11 @@ public class Mission {
 		return region;
 	}
 	
-	public void setRegionOldMembers(DefaultDomain oldMembers) {
+	public void setRegionOldMembers(DefaultDomainWrapper oldMembers) {
 		this.regionOldMembers = oldMembers;
 	}
 	
-	public DefaultDomain getRegionOldMembers() {
+	public DefaultDomainWrapper getRegionOldMembers() {
 		return regionOldMembers;
 	}
 	

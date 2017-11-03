@@ -93,7 +93,7 @@ public class WorldGuardHandler {
 		DefaultDomain members = region.getMembers();
 		
 		mission.setRegion(region);
-		mission.setRegionOldMembers(members);
+		mission.setRegionOldMembers(new DefaultDomainWrapper(members));
 		
 		for(Player player : players) {
 			System.out.println("Adding " + player.getDisplayName() + " to member list.");
@@ -105,13 +105,15 @@ public class WorldGuardHandler {
 		saveRegionChanges(loc.getWorld());
 	}
 	
-	// TODO Withdrawing permission is not working yet, fix it!
+	// TODO Test whether this method works
 	public void setOldBuildPermissions(Location loc, Mission mission) {
 		ProtectedRegion region = mission.getRegion();
-		if(!(mission.getRegionOldMembers() == null)) {
-			region.setMembers(mission.getRegionOldMembers());			
-		} else {
-			region.setMembers(new DefaultDomain());
+		if(mission.getRegionOldMembers() != null) {
+			DefaultDomainWrapper backup = mission.getRegionOldMembers();
+			DefaultDomain dd = new DefaultDomain();
+			dd.setGroupDomain(backup.getGroupDomain());
+			dd.setPlayerDomain(backup.getPlayerDomain());
+			region.setMembers(dd);
 		}
 		saveRegionChanges(loc.getWorld());
 	}

@@ -1,5 +1,10 @@
 package com.blogspot.debukkitsblog.firefighterpro;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 public enum Messages {
@@ -36,7 +41,7 @@ public enum Messages {
 	private String message;
 	
 	public static void initMessages() {
-		//TODO Implementieren
+		// Set default messages
 		ALARM_MESSAGE_INTRO.setMessage("-- " + ChatColor.RED + "EMERGENCY CALL for the FIRE BRIGADE!" + ChatColor.WHITE + " --");
 		ALARM_MESSAGE_CONTENT_DEFAULT.setMessage("Unknown emergency situation, no further information.");
 		ALARM_MESSAGE_FD_INFORMED.setMessage("Please keep calm! The fire department has been informed. We'll let you know when the first firefighter is on the way to you!");
@@ -64,7 +69,26 @@ public enum Messages {
 		MANAGER_FIRESTATION_LOCATION_SET_FOR_FIREFIGHTERS.setMessage("A new fire station has been set at");
 		MANAGER_AUTODISPATCH_ON.setMessage("Autodispatch has been turned on. Alarms will be dispatched to every firefighter automatically now.");
 		MANAGER_AUTODISPATCH_OFF.setMessage("Autodispatch has been turned off. A dispatcher is needed to turn an emergency call into an alarm now.");
-		MISSION_ENDED.setMessage("The mission is finished, the place of deployment has been handed over to the owner.");		
+		MISSION_ENDED.setMessage("The mission is finished, the place of deployment has been handed over to the owner.");
+		
+		// Write language file to allow users to add a translation
+		String content = "";
+		for(Messages key : Messages.values()) {
+			content += key + ": " + key.getMessage() + "\n";
+		}
+		
+		File langFile = new File(Bukkit.getPluginManager().getPlugin("FirefighterPro").getDataFolder() + java.io.File.separator + "messages.lang");
+		try {
+			if(!langFile.createNewFile()) {
+				FileWriter fw = new FileWriter(langFile);
+				fw.write(content.trim());
+				fw.flush();
+				fw.close();
+			}						
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	private void setMessage(String msg) {
