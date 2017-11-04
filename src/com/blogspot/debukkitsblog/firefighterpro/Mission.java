@@ -13,7 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.blogspot.debukkitsblog.firefighterpro.worldguard.DefaultDomainWrapper;
+import com.blogspot.debukkitsblog.firefighterpro.worldguard.PlayerDomainWrapper;
 import com.blospot.debukkitsblog.firefighterpro.ui.UIManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
@@ -37,14 +37,16 @@ public class Mission {
 	private int manpower;
 	private HashMap<UUID, ItemStack[]> firefightersEquipped;
 	
+	private boolean buildingAllowed;
 	private ProtectedRegion region;
-	private DefaultDomainWrapper regionOldMembers;
+	private PlayerDomainWrapper regionOldMembers;
 	
 	public Mission(FirefighterPro plugin, String emergencyMessage, Location location, Player callingCivilian) {
 		this.plugin = plugin;
 		this.emergencyMessage = emergencyMessage;
 		this.location = location;
 		this.callingCivilian = callingCivilian;
+		this.buildingAllowed = false;
 		this.firefightersEquipped = new HashMap<UUID, ItemStack[]>();
 		this.regionOldMembers = null;
 		
@@ -56,6 +58,15 @@ public class Mission {
 	}
 	
 	public int dispatch(String unitName, String additionalMessage) {
+		// Do not dispatch for mission which are over
+		if(isOver) {
+			return -2;
+		}
+		// Allow firefighters to build in the emergency's WorldGuard region
+		if(plugin.isWorldGuardSupported() && !buildingAllowed) {
+			plugin.getWorldGuardHandler().setAllowBuild(location, this);
+			buildingAllowed = true;
+		}
 		// check whether unit exists
 		if(plugin.getFFConfig().unitExist(unitName)) {
 			// remember timestamp for statistics
@@ -71,7 +82,16 @@ public class Mission {
 		return -1; // if the unit does not exist
 	}
 	
-	public int dispatchAuto() {		
+	public int dispatchAuto() {
+		// Do not dispatch for mission which are over
+		if(isOver) {
+			return -2;
+		}
+		// Allow firefighters to build in the emergency's WorldGuard region
+		if(plugin.isWorldGuardSupported() && !buildingAllowed) {
+			plugin.getWorldGuardHandler().setAllowBuild(location, this);
+			buildingAllowed = true;
+		}	
 		// remember timestamp for statistics
 		if(this.timeStamps[1] == null) this.timeStamps[1] = currentTime();
 		// update scoreboards
@@ -133,11 +153,17 @@ public class Mission {
 		// restore the inventory
 		quittingFirefighter.getInventory().setContents(firefightersEquipped.get(quittingFirefighter.getUniqueId()));
 		quittingFirefighter.sendMessage(Messages.format(Messages.FIREFIGHTER_INVENTORY_RESTORED));
+		// Teleport back to fire station
+		quittingFirefighter.teleport(plugin.getFFConfig().getStationLocation());
 	}	
 	
-	public void end() {
+	public void end() {		
 		// mark the mission as over
 		isOver = true;
+		// Deny firefighters to build in the emergency's region, reset old members
+		if(plugin.isWorldGuardSupported()) {
+			plugin.getWorldGuardHandler().setOldBuildPermissions(location, this);
+		}
 		// send end message to every firefighter and dispatcher
 		plugin.getBroadcaster().broadcastToDispatchers(Messages.format(Messages.INFO_HEADLINE_DISPATCHERS));
 		plugin.getBroadcaster().broadcastToDispatchers(Messages.format(Messages.MISSION_ENDED));
@@ -216,11 +242,11 @@ public class Mission {
 		return region;
 	}
 	
-	public void setRegionOldMembers(DefaultDomainWrapper oldMembers) {
+	public void setRegionOldMembers(PlayerDomainWrapper oldMembers) {
 		this.regionOldMembers = oldMembers;
 	}
 	
-	public DefaultDomainWrapper getRegionOldMembers() {
+	public PlayerDomainWrapper getRegionOldMembers() {
 		return regionOldMembers;
 	}
 	

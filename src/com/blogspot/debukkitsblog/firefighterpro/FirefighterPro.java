@@ -8,12 +8,15 @@ import com.blogspot.debukkitsblog.firefighterpro.commands.CommandFF;
 import com.blogspot.debukkitsblog.firefighterpro.commands.CommandManage;
 import com.blogspot.debukkitsblog.firefighterpro.commands.CommandDebug;
 import com.blogspot.debukkitsblog.firefighterpro.events.SignEventHandler;
+import com.blogspot.debukkitsblog.firefighterpro.worldguard.WorldGuardHandler;
 
 public class FirefighterPro extends JavaPlugin {
 	
 	private Mission currentMission;
 	private Config config;
 	private Broadcaster broadcaster;
+	
+	private WorldGuardHandler worldGuardHandler;
 	
 	@Override
 	public void onEnable() {
@@ -24,7 +27,13 @@ public class FirefighterPro extends JavaPlugin {
 		Messages.initMessages();
 		
 		getServer().getPluginManager().registerEvents(new SignEventHandler(this), this);
-		registerCommandExecutors();	
+		registerCommandExecutors();
+		
+		try {
+			worldGuardHandler = new WorldGuardHandler(this);
+		} catch(NoClassDefFoundError e) {
+			System.out.println(Messages.format("WorldGuard not found, working without WorldGuard support."));
+		}
 	}
 	
 	@Override
@@ -37,7 +46,7 @@ public class FirefighterPro extends JavaPlugin {
 		getCommand("ff").setExecutor(new CommandFF(this));
 		getCommand("ffdispatch").setExecutor(new CommandDispatch(this));
 		getCommand("ffmanage").setExecutor(new CommandManage(this));
-		getCommand("ffregiontest").setExecutor(new CommandDebug(this));
+		getCommand("ffdebug").setExecutor(new CommandDebug(this));
 	}
 	
 	public Broadcaster getBroadcaster() {
@@ -54,6 +63,14 @@ public class FirefighterPro extends JavaPlugin {
 
 	public void setCurrentMission(Mission currentMission) {
 		this.currentMission = currentMission;
+	}
+	
+	public boolean isWorldGuardSupported() {
+		return worldGuardHandler != null;
+	}
+	
+	public WorldGuardHandler getWorldGuardHandler() {
+		return worldGuardHandler;
 	}
 	
 }

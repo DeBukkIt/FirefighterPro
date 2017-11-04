@@ -22,18 +22,16 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class WorldGuardHandler {
 	
+	private final FirefighterPro plugin;
 	private Plugin worldguard;
 	
 	public WorldGuardHandler(FirefighterPro plugin) {
+		this.plugin = plugin;
 		try {
 			worldguard = plugin.getServer().getPluginManager().getPlugin("WorldGuard");
 		} catch(NoClassDefFoundError ex) {
 			System.err.println("WorldGuard not found, working without WorldGuard support.");
 		}		
-	}
-	
-	public boolean isAvailable() {
-		return worldguard != null;
 	}
 	
 	private WorldGuardPlugin getWorldGuard() {
@@ -89,33 +87,28 @@ public class WorldGuardHandler {
 	
 	public void setAllowBuild(Location loc, Mission mission) {
 		ProtectedRegion region = getLowestLevelRegion(loc);
-		List<Player> players = mission.getFirefighters();
-		DefaultDomain members = region.getMembers();
+		List<Player> allFirefighters = plugin.getFFConfig().getFirefighters();
+		DefaultDomain regionMembers = region.getMembers();
 		
 		mission.setRegion(region);
-		mission.setRegionOldMembers(new DefaultDomainWrapper(members));
+		mission.setRegionOldMembers(new PlayerDomainWrapper(regionMembers.getPlayerDomain()));
 		
-		for(Player player : players) {
-			System.out.println("Adding " + player.getDisplayName() + " to member list.");
-			members.addPlayer(getWorldGuard().wrapPlayer(player));
+		for(Player currentFirefighter : allFirefighters) {
+			regionMembers.addPlayer(getWorldGuard().wrapPlayer(currentFirefighter));
 		}
-		System.out.println("Setting member list (size=" + members.size() + ") to region " + region.getId());
-		region.setMembers(members);
+		region.setMembers(regionMembers);
 		
 		saveRegionChanges(loc.getWorld());
+		System.out.println(Messages.format("All firefighters are members of region " + region.getId() + " for the running mission."));
 	}
 	
-	// TODO Test whether this method works
 	public void setOldBuildPermissions(Location loc, Mission mission) {
 		ProtectedRegion region = mission.getRegion();
 		if(mission.getRegionOldMembers() != null) {
-			DefaultDomainWrapper backup = mission.getRegionOldMembers();
-			DefaultDomain dd = new DefaultDomain();
-			dd.setGroupDomain(backup.getGroupDomain());
-			dd.setPlayerDomain(backup.getPlayerDomain());
-			region.setMembers(dd);
+			region.getMembers().setPlayerDomain(mission.getRegionOldMembers().get());
+			saveRegionChanges(loc.getWorld());
 		}
-		saveRegionChanges(loc.getWorld());
+		System.out.println(Messages.format("Members of region " + region.getId() + " reset after mission ended."));
 	}
 	
 	private void saveRegionChanges(World world) {

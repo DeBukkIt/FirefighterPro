@@ -18,10 +18,13 @@ public class CommandDebug implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
-		WorldGuardHandler wgHandler = new WorldGuardHandler(plugin);
-		if(!wgHandler.isAvailable()) {
-			sender.sendMessage("WorldGuard not installed.");
+		WorldGuardHandler wgHandler = null;
+		
+		if(!plugin.isWorldGuardSupported()) {
+			sender.sendMessage("No WorldGuard supported.");
 			return true;
+		} else {
+			wgHandler = plugin.getWorldGuardHandler();
 		}
 		
 		if(args.length == 0) {

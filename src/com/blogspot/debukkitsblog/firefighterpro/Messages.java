@@ -1,8 +1,12 @@
 package com.blogspot.debukkitsblog.firefighterpro;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.Scanner;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -72,23 +76,59 @@ public enum Messages {
 		MISSION_ENDED.setMessage("The mission is finished, the place of deployment has been handed over to the owner.");
 		
 		// Write language file to allow users to add a translation
-		String content = "";
+		String content = "### Do not use the Windows Notepad for editing, because it ignores the (really important) line breaks in this file ###\n" 
+				+ "### Edit messages in this file. Only change the part on the right hand side. ###\n"
+				+ "### Variable names and message content will be split at ': ', so leave the whitespace where it is and do not use ': ' in your messages! ###\n\n";
 		for(Messages key : Messages.values()) {
-			content += key + ": " + key.getMessage() + "\n";
+			content += key.name() + ": " + key.getMessage() + "\n";
 		}
 		
 		File langFile = new File(Bukkit.getPluginManager().getPlugin("FirefighterPro").getDataFolder() + java.io.File.separator + "messages.lang");
 		try {
-			if(!langFile.createNewFile()) {
-				FileWriter fw = new FileWriter(langFile);
-				fw.write(content.trim());
-				fw.flush();
-				fw.close();
-			}						
-		} catch(IOException e) {
+			// Check whether file already exists
+			if(!langFile.exists()) {
+				// if not: create and write default content (from above)
+				langFile.createNewFile();
+				
+				OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(langFile));
+				osw.write(content.trim());
+				osw.flush();
+				osw.close();
+			} else {
+				
+				// if file already exists, read the content
+				
+				Scanner s = new Scanner(new BufferedReader(new InputStreamReader(new FileInputStream(langFile), "UTF-8")));
+				// Iterate every line of the file
+				while(s.hasNextLine()) {
+					String line = s.nextLine();
+					// ignore empty or comment lines
+					if(line != null && !line.isEmpty() && !line.startsWith("###")) {
+						// split lines at ': '
+						if(line.contains(": "))					 {
+							String[] parts = line.split(": ");
+							// filter lines where more or less than 2 ': ' were found
+							if(parts != null && parts.length == 2) {
+								// apply message content to the right Message
+								String keyFromFile = parts[0];
+								String contentFromFile = parts[1];
+								/// ...using a loop over all Messages
+								for(Messages currentMessage : Messages.values()) {
+									if(currentMessage.name().equalsIgnoreCase(keyFromFile)) {
+										currentMessage.setMessage(contentFromFile);
+										break;
+									}
+								}
+							}
+						}
+					}
+				}
+				s.close();
+				
+			}
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	private void setMessage(String msg) {
