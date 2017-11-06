@@ -3,6 +3,7 @@ package com.blogspot.debukkitsblog.firefighterpro.insurance;
 import org.bukkit.entity.Player;
 
 import com.blogspot.debukkitsblog.firefighterpro.FirefighterPro;
+import com.blogspot.debukkitsblog.firefighterpro.Messages;
 
 public class InsuranceCustomer {
 	
@@ -22,6 +23,15 @@ public class InsuranceCustomer {
 		nextPayday = System.currentTimeMillis() + daysToMillis(dayInterval);
 	}
 	
+	public void sendInsuranceInformation() {
+		player.sendMessage(Messages.format(Messages.INSURANCE_INFORMATION.getMessage()
+				.replaceAll("%ai", "" + installment)
+				.replaceAll("%di", "" + dayInterval)
+				.replaceAll("%as", "" + sumInsured)
+				.replaceAll("%dr", "" + getDaysToNextPayday())
+		));
+	}
+	
 	public int getDaysToNextPayday() {
 		return millisToDays(nextPayday - System.currentTimeMillis());
 	}
@@ -31,7 +41,7 @@ public class InsuranceCustomer {
 	}
 	
 	public void payInstallment() {
-		if(plugin.isEconomySupported()) {
+		if(plugin.isEconomySupported() && getDaysToNextPayday() >= 0) {
 			plugin.getEconomy().withdrawPlayer(player, installment);
 			nextPayday += daysToMillis(dayInterval);
 		}

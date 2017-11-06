@@ -3,12 +3,9 @@ package com.blogspot.debukkitsblog.firefighterpro;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.blogspot.debukkitsblog.firefighterpro.commands.CommandAlarm;
-import com.blogspot.debukkitsblog.firefighterpro.commands.CommandDispatch;
-import com.blogspot.debukkitsblog.firefighterpro.commands.CommandFF;
-import com.blogspot.debukkitsblog.firefighterpro.commands.CommandManage;
-import com.blogspot.debukkitsblog.firefighterpro.commands.CommandDebug;
+import com.blogspot.debukkitsblog.firefighterpro.commands.*;
 import com.blogspot.debukkitsblog.firefighterpro.events.SignEventHandler;
+import com.blogspot.debukkitsblog.firefighterpro.insurance.Insurance;
 import com.blogspot.debukkitsblog.firefighterpro.worldguard.WorldGuardHandler;
 
 import net.milkbowl.vault.economy.Economy;
@@ -20,7 +17,8 @@ public class FirefighterPro extends JavaPlugin {
 	private Broadcaster broadcaster;
 	
 	private WorldGuardHandler worldGuardHandler;
-    private Economy econ = null;
+    private Economy econ;
+    private Insurance insurance;
 	
 	@Override
 	public void onEnable() {
@@ -40,6 +38,11 @@ public class FirefighterPro extends JavaPlugin {
 		}
 		
 		setupEconomy();
+		if(isEconomySupported()) {
+			insurance = new Insurance(this);
+		} else {
+			System.out.println(Messages.format("Could not enable economy system, fire insurance and payment disabled."));
+		}
 	}
 	
 	@Override
@@ -82,6 +85,10 @@ public class FirefighterPro extends JavaPlugin {
 
 	public void setCurrentMission(Mission currentMission) {
 		this.currentMission = currentMission;
+	}
+	
+	public Insurance getInsurance() {
+		return insurance;
 	}
 	
 	public boolean isEconomySupported() {

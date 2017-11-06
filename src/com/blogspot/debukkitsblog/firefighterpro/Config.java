@@ -109,6 +109,11 @@ public class Config {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<String> getDispatchersUUIDStrings() {
+		return (ArrayList<String>) configData.get("firedepartment.personnel.dispatchers");
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<Player> getFirefighters() {
 		List<Player> result = new ArrayList<Player>();
 		ArrayList<String> firefighterIDs = (ArrayList<String>) configData.get("firedepartment.personnel.members");
@@ -118,6 +123,11 @@ public class Config {
 			}
 		}
 		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> getFirefightersUUIDStrings() {
+		return (ArrayList<String>) configData.get("firedepartment.personnel.members");
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -132,11 +142,16 @@ public class Config {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<String> getFirefightersInUnitUUIDStrings(String unitName) {
+		return (ArrayList<String>) configData.get("firedepartment.units." + unitName + ".members");
+	}
+	
 	public void removeFirefighter(Player p) {
-		List<Player> ffs = getFirefighters();
-		for(Player c : ffs) {
-			if(c.getUniqueId().equals(p.getUniqueId())) {
-				ffs.remove(c);
+		List<String> ffs = getFirefightersUUIDStrings();
+		for(String id : ffs) {
+			if(UUID.fromString(id).equals(p.getUniqueId())) {
+				ffs.remove(id);
 				configData.set("firedepartment.personnel.members", ffs);
 				plugin.saveConfig();
 				return;
@@ -145,17 +160,17 @@ public class Config {
 	}
 	
 	public void addFirefighter(Player p) {
-		List<Player> ffs = getFirefighters();
-		ffs.add(p);
+		List<String> ffs = getFirefightersUUIDStrings();
+		ffs.add(p.getUniqueId().toString());
 		configData.set("firedepartment.personnel.members", ffs);
 		plugin.saveConfig();
 	}
 	
 	public void removeDispatcher(Player p) {
-		List<Player> dps = getDispatchers();
-		for(Player c : dps) {
-			if(c.getUniqueId().equals(p.getUniqueId())) {
-				dps.remove(c);
+		List<String> dps = getDispatchersUUIDStrings();
+		for(String id : dps) {
+			if(UUID.fromString(id).equals(p.getUniqueId())) {
+				dps.remove(id);
 				configData.set("firedepartment.personnel.dispatchers", dps);
 				plugin.saveConfig();
 				return;
@@ -164,8 +179,8 @@ public class Config {
 	}
 	
 	public void addDispatcher(Player p) {
-		List<Player> dps = getDispatchers();
-		dps.add(p);
+		List<String> dps = getDispatchersUUIDStrings();
+		dps.add(p.getUniqueId().toString());
 		configData.set("firedepartment.personnel.dispatchers", dps);
 		plugin.saveConfig();
 	}
@@ -198,10 +213,10 @@ public class Config {
 	}
 	
 	public void removeFromUnit(Player p, String unitName) {
-		List<Player> ffs = getFirefightersInUnit(unitName);
-		for(Player c : ffs) {
-			if(c.getUniqueId().equals(p.getUniqueId())) {
-				ffs.remove(c);
+		List<String> ffs = getFirefightersInUnitUUIDStrings(unitName);
+		for(String id : ffs) {
+			if(UUID.fromString(id).equals(p.getUniqueId())) {
+				ffs.remove(id);
 				configData.set("firedepartment.units." + unitName + ".members", ffs);
 				plugin.saveConfig();
 				return;
@@ -210,9 +225,9 @@ public class Config {
 	}
 	
 	public void addToUnit(Player p, String unitName) {
-		List<Player> ffs = getFirefightersInUnit(unitName);
+		List<String> ffs = getFirefightersInUnitUUIDStrings(unitName);
 		if (ffs != null) {
-			ffs.add(p);
+			ffs.add(p.getUniqueId().toString());
 			configData.set("firedepartment.units." + unitName + ".members", ffs);
 			plugin.saveConfig();
 		}
@@ -227,6 +242,7 @@ public class Config {
 	public void removeUnit(String unitName) {
 		configData.set("firedepartment.units." + unitName + ".name", null);
 		configData.set("firedepartment.units." + unitName + ".members", null);
+		configData.set("firedepartment.units." + unitName, null);
 		plugin.saveConfig();
 	}	
 	

@@ -20,6 +20,8 @@ public enum Messages {
 	ALARM_MESSAGE_FIREFIGHTER_HELP_ROGER,
 	ALARM_INFO_FIREFIGHTER_ROGERED,
 	ALARM_INFO_FIREFIGHTER_RESPONDED,
+	DISPATCH_UNITS_DISPATCHED,
+	DISPATCH_FIREFIGHTER_ROGERED,
 	ERROR_FIRE_DEPT_NOT_AVAILABLE,
 	ERROR_COMMAND_NO_CONSOLE,
 	ERROR_DISPATCH_UNIT_NOT_EXIST,
@@ -36,15 +38,15 @@ public enum Messages {
 	ERROR_IS_ALREADY_DISPATCHER,
 	ERROR_UNIT_ALREADY_EXISTS,
 	ERROR_VAULT_NOT_INSTALLED,
-	DISPATCH_UNITS_DISPATCHED,
-	DISPATCH_FIREFIGHTER_ROGERED,
-	INFO_HEADLINE_DISPATCHERS,
-	INFO_HEADLINE_FIREFIGHTERS_ALL,
-	INFO_HEADLINE_FIREFIGHTERS_UNIT,
 	FIREFIGHTER_EQUIPPED,
 	FIREFIGHTER_RESPONDED,
 	FIREFIGHTER_QUIT_MISSION,
 	FIREFIGHTER_INVENTORY_RESTORED,
+	INFO_HEADLINE_DISPATCHERS,
+	INFO_HEADLINE_FIREFIGHTERS_ALL,
+	INFO_HEADLINE_FIREFIGHTERS_UNIT,
+	INSURANCE_PAYED,
+	INSURANCE_INFORMATION,
 	MANAGER_FIRESTATION_LOCATION_SET,
 	MANAGER_FIRESTATION_LOCATION_SET_FOR_FIREFIGHTERS,
 	MANAGER_AUTODISPATCH_ON,
@@ -98,6 +100,8 @@ public enum Messages {
 		INFO_HEADLINE_DISPATCHERS.setMessage("# Information message for all Dispatchers ++");
 		INFO_HEADLINE_FIREFIGHTERS_ALL.setMessage("# Information message for all Firefighters ++");
 		INFO_HEADLINE_FIREFIGHTERS_UNIT.setMessage("# Information message for firefighters in unit");
+		INSURANCE_PAYED.setMessage("Your insurance contribution has been withdrawn. The next one is due in %d days.");
+		INSURANCE_INFORMATION.setMessage("You are insured for fire damage with an insurance fee of %ai euros every %di days and receive %as euros in case of damage. The next installment is due in %dr days.");
 		FIREFIGHTER_EQUIPPED.setMessage("You have been equipped with your most necessary equipment. You'll get your things back later using /ff quit");
 		FIREFIGHTER_RESPONDED.setMessage("has moved out and has approached the site");
 		FIREFIGHTER_QUIT_MISSION.setMessage("quit the mission and returned to base.");

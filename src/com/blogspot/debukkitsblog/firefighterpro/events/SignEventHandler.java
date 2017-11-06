@@ -101,10 +101,8 @@ public class SignEventHandler implements Listener {
 		// examine its environment
 		for(int x = (blockX-1); x <= (blockX+1); x++) {
 			for(int y = (blockY-1); y <= (blockY+1); y++) {
-				for(int z = (blockZ-1); z <= (blockZ+1); z++) {
-					
+				for(int z = (blockZ-1); z <= (blockZ+1); z++) {					
 					// get every sign in the nearest environment
-					// TODO only get block that are reached by a signal from a reasonable direction.					
 					Block target = block.getWorld().getBlockAt(x, y, z);					
 					if(isSign(target)) {
 						// if its a FirefighterPro command sign, dispatch its command
