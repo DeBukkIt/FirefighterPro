@@ -35,7 +35,7 @@ public class Mission {
 	private boolean isOver;
 	private String[] timeStamps;		
 	private int manpower;
-	private HashMap<UUID, ItemStack[]> firefightersEquipped;
+	private HashMap<UUID, ItemStack[]> firefightersInMission;
 	
 	private boolean buildingAllowed;
 	private ProtectedRegion region;
@@ -47,7 +47,7 @@ public class Mission {
 		this.location = location;
 		this.callingCivilian = callingCivilian;
 		this.buildingAllowed = false;
-		this.firefightersEquipped = new HashMap<UUID, ItemStack[]>();
+		this.firefightersInMission = new HashMap<UUID, ItemStack[]>();
 		this.regionOldMembers = null;
 		
 		this.dispatcher = null;
@@ -120,7 +120,7 @@ public class Mission {
 		ArrayList<ItemStack> equipment = plugin.getFFConfig().getEquipment();
 		if(equipment != null) {
 			// save and empty inventory
-			firefightersEquipped.put(equippingFirefighter.getUniqueId(), equippingFirefighter.getInventory().getContents());
+			firefightersInMission.put(equippingFirefighter.getUniqueId(), equippingFirefighter.getInventory().getContents());
 			equippingFirefighter.getInventory().clear();
 			// insert equipment
 			for(int i = 0; i < equipment.size(); i++) {
@@ -134,8 +134,8 @@ public class Mission {
 	
 	public void respond(Player respondingFirefighter) {
 		// for not-equipped firefighters: add to the list
-		if(!firefightersEquipped.containsKey(respondingFirefighter.getUniqueId())) {
-			firefightersEquipped.put(respondingFirefighter.getUniqueId(), respondingFirefighter.getInventory().getContents());
+		if(!firefightersInMission.containsKey(respondingFirefighter.getUniqueId())) {
+			firefightersInMission.put(respondingFirefighter.getUniqueId(), respondingFirefighter.getInventory().getContents());
 		}
 		// teleport the firefighter to the site
 		respondingFirefighter.teleport(location);
@@ -151,11 +151,17 @@ public class Mission {
 		quittingFirefighter.sendMessage(Messages.format(ChatColor.RED + quittingFirefighter.getDisplayName() + ChatColor.WHITE + " " + Messages.FIREFIGHTER_QUIT_MISSION));
 		if(dispatcher != null) dispatcher.sendMessage(Messages.format(ChatColor.RED + quittingFirefighter.getDisplayName() + ChatColor.WHITE + " " + Messages.FIREFIGHTER_QUIT_MISSION));
 		// restore the inventory
-		quittingFirefighter.getInventory().setContents(firefightersEquipped.get(quittingFirefighter.getUniqueId()));
+		quittingFirefighter.getInventory().setContents(firefightersInMission.get(quittingFirefighter.getUniqueId()));
 		quittingFirefighter.sendMessage(Messages.format(Messages.FIREFIGHTER_INVENTORY_RESTORED));
 		// Teleport back to fire station
 		quittingFirefighter.teleport(plugin.getFFConfig().getStationLocation());
 	}	
+	
+	private void payCompensation(Player p) {
+		if(plugin.isEconomySupported()) {
+			plugin.getEconomy().depositPlayer(p, plugin.getFFConfig().getSingleMissionCompensation());
+		}
+	}
 	
 	public void end() {		
 		// mark the mission as over
@@ -170,8 +176,10 @@ public class Mission {
 		plugin.getBroadcaster().broadcastToFirefighters(Messages.format(Messages.INFO_HEADLINE_FIREFIGHTERS_ALL));
 		plugin.getBroadcaster().broadcastToFirefighters(Messages.format(Messages.MISSION_ENDED));
 		// remove all firefighters from this mission, give them their inventory back
-		for(UUID id : firefightersEquipped.keySet()) {
+		for(UUID id : firefightersInMission.keySet()) {
 			Player pl = Bukkit.getServer().getPlayer(id);
+			// pay compensation
+			payCompensation(pl);
 			if(pl.isOnline()) {
 				quit(pl);
 			}
@@ -180,8 +188,8 @@ public class Mission {
 	
 	public List<Player> getFirefighters() {
 		List<Player> result = new ArrayList<Player>();
-		if(firefightersEquipped != null) {
-			for (UUID id : firefightersEquipped.keySet()) {
+		if(firefightersInMission != null) {
+			for (UUID id : firefightersInMission.keySet()) {
 				result.add(Bukkit.getServer().getPlayer(id));
 			}
 		}
@@ -196,7 +204,7 @@ public class Mission {
 	}
 	
 	public boolean hasBeenAtLocation(Player player) {
-		return firefightersEquipped.containsKey(player.getUniqueId());
+		return firefightersInMission.containsKey(player.getUniqueId());
 	}
 	
 	private String currentTime() {

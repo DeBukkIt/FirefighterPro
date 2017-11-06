@@ -19,12 +19,12 @@ commands:
      ffmanage:
           description: Manages a fire department
           permission: ffpro.manager
-          usage: /<command> <setStation> | (<setAutodispatch> true|false) | (<firefighterAdd|firefighterRemove> <firefighter> <unit>) | (<dispatcherAdd|dispatcherRemove> <dispatcher>) | (<unitAdd|unitRemove> <unit>)
+          usage: /<command> <setStation> | (<setAutodispatch> true|false) | (<firefighterAdd|firefighterRemove> <firefighter>) | (<dispatcherAdd|dispatcherRemove> <dispatcher>) | (<unitAdd|unitRemove> <unit>) | assignToUnit <firefighter> <unit> | removeFromUnit <firefighter> <unit> | paySalaries
      ffdispatch:
           description: Reacts to a call of a civilian in danger
           permission: ffpro.dispatcher
           usage: /<command> ([<unit1> [<unit2> [...]]] [-m <infoMessage>]) | -end
      ffdebug:
-          description: Debugs the WorldGuard API
+          description: Debugs this plugin, remove command before release
           permission: ffpro.debug
           usage: /<command>

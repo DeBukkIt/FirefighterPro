@@ -27,6 +27,15 @@ public enum Messages {
 	ERROR_NOT_PART_OF_MISSION,
 	ERROR_NO_MISSION_CURRENTLY_DISPATCH,
 	ERROR_NO_MISSION_CURRENTLY_RESPOND,
+	ERROR_UNIT_NOT_EXIST,
+	ERROR_PLAYER_NOT_FIREFIGHTER,
+	ERROR_PLAYER_NOT_FOUND,
+	ERROR_NOT_MEMBER_OF_UNIT,
+	ERROR_IS_ALREADY_FIREFIGHTER,
+	ERROR_PLAYER_NOT_DISPATCHER,
+	ERROR_IS_ALREADY_DISPATCHER,
+	ERROR_UNIT_ALREADY_EXISTS,
+	ERROR_VAULT_NOT_INSTALLED,
 	DISPATCH_UNITS_DISPATCHED,
 	DISPATCH_FIREFIGHTER_ROGERED,
 	INFO_HEADLINE_DISPATCHERS,
@@ -40,6 +49,21 @@ public enum Messages {
 	MANAGER_FIRESTATION_LOCATION_SET_FOR_FIREFIGHTERS,
 	MANAGER_AUTODISPATCH_ON,
 	MANAGER_AUTODISPATCH_OFF,
+	MANAGER_PLAYER_ASSIGNED_TO_UNIT,
+	MANAGER_ADDED_FIREFIGHTER,
+	MANAGER_PLAYER_REMOVED_FROM_UNIT,
+	MANAGER_REMOVED_FIREFIGHTER,
+	MANAGER_ADDED_DISPATCHER,
+	MANAGER_REMOVED_DISPATCHER,
+	MANAGER_UNIT_ADDED,
+	MANAGER_UNIT_REMOVED,
+	MANAGER_SALARIES_PAYED,
+	YOU_HAVE_BEEN_REMOVED_FROM_UNIT,
+	YOU_ARE_NO_LONGER_A_FIREFIGHTER,
+	YOU_HAVE_BEEN_ASSIGNED_TO_UNIT,
+	YOU_ARE_A_FIREFIGHTER,
+	YOU_ARE_A_DISAPTCHER,
+	YOU_ARE_NO_LONGER_A_DISPATCHER,
 	MISSION_ENDED;
 	
 	private String message;
@@ -60,6 +84,15 @@ public enum Messages {
 		ERROR_NOT_PART_OF_MISSION.setMessage("You are not part of the running call and cannot use this command at the moment.");
 		ERROR_NO_MISSION_CURRENTLY_DISPATCH.setMessage("At the moment there is no mission to dispatch units for.");
 		ERROR_NO_MISSION_CURRENTLY_RESPOND.setMessage("At the moment there is no mission to roger, equip for or respond to.");
+		ERROR_UNIT_NOT_EXIST.setMessage("There is no unit with this name yet.");
+		ERROR_PLAYER_NOT_FIREFIGHTER.setMessage("This player is not a firefighter.");
+		ERROR_PLAYER_NOT_FOUND.setMessage("This player has never played on this server.");
+		ERROR_NOT_MEMBER_OF_UNIT.setMessage("This player is not member of that unit.");
+		ERROR_IS_ALREADY_FIREFIGHTER.setMessage("This player is already member of the fire department.");
+		ERROR_PLAYER_NOT_DISPATCHER.setMessage("This player is not a dispatcher.");
+		ERROR_IS_ALREADY_DISPATCHER.setMessage("This player is already a dispatcher.");
+		ERROR_UNIT_ALREADY_EXISTS.setMessage("This unit already exists.");
+		ERROR_VAULT_NOT_INSTALLED.setMessage("Economy is not supported on this server. Plugin 'Vault' is missing.");
 		DISPATCH_UNITS_DISPATCHED.setMessage("firefighters dispatched.");
 		DISPATCH_FIREFIGHTER_ROGERED.setMessage("Roger that! En route to the fire station.");
 		INFO_HEADLINE_DISPATCHERS.setMessage("# Information message for all Dispatchers ++");
@@ -73,6 +106,21 @@ public enum Messages {
 		MANAGER_FIRESTATION_LOCATION_SET_FOR_FIREFIGHTERS.setMessage("A new fire station has been set at");
 		MANAGER_AUTODISPATCH_ON.setMessage("Autodispatch has been turned on. Alarms will be dispatched to every firefighter automatically now.");
 		MANAGER_AUTODISPATCH_OFF.setMessage("Autodispatch has been turned off. A dispatcher is needed to turn an emergency call into an alarm now.");
+		MANAGER_PLAYER_ASSIGNED_TO_UNIT.setMessage("has been assigned to unit");
+		MANAGER_PLAYER_REMOVED_FROM_UNIT.setMessage("has been removed from unit");
+		MANAGER_ADDED_FIREFIGHTER.setMessage("is a firefighter now.");
+		MANAGER_REMOVED_FIREFIGHTER.setMessage("is no longer a firefighter.");
+		MANAGER_ADDED_DISPATCHER.setMessage("is a dispatcher now.");
+		MANAGER_REMOVED_DISPATCHER.setMessage("is no longer a dispatcher.");
+		MANAGER_UNIT_ADDED.setMessage("You created the unit");
+		MANAGER_UNIT_REMOVED.setMessage("You removed the unit");
+		MANAGER_SALARIES_PAYED.setMessage("Salaries have been payed to firefighters and dispatchers. Total value:");
+		YOU_ARE_A_DISAPTCHER.setMessage("Congratulations! You are a dispatcher now!");
+		YOU_ARE_NO_LONGER_A_DISPATCHER.setMessage("You are no longer a dispatcher.");
+		YOU_HAVE_BEEN_ASSIGNED_TO_UNIT.setMessage("You have been assigned to unit");
+		YOU_HAVE_BEEN_REMOVED_FROM_UNIT.setMessage("You have been removed from unit");
+		YOU_ARE_A_FIREFIGHTER.setMessage("Congratulations! You are a firefighter now!");
+		YOU_ARE_NO_LONGER_A_FIREFIGHTER.setMessage("You are no longer a firefighter.");
 		MISSION_ENDED.setMessage("The mission is finished, the place of deployment has been handed over to the owner.");
 		
 		// Write language file to allow users to add a translation

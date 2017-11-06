@@ -30,11 +30,14 @@ public class Config {
 	private void generateInitialConfiguration() {
 		configData.addDefault("firedepartment.name", "Mine City Volunteer Fire Co.");
 		configData.addDefault("firedepartment.location", plugin.getServer().getWorlds().get(0).getSpawnLocation());
+		configData.addDefault("firedepartment.economy.singleMissionCompensation", 25.0);
+		configData.addDefault("firedepartment.economy.salary.firefighters", 1800.0);
+		configData.addDefault("firedepartment.economy.salary.dispatchers", 1800.0);
 		
-		ArrayList<String> equipmentItems = new ArrayList<String>(3);
-		equipmentItems.add(Material.LADDER + " 16");
-		equipmentItems.add(Material.WATER_BUCKET + " 5");
-		equipmentItems.add(Material.IRON_AXE + " 1");
+			ArrayList<String> equipmentItems = new ArrayList<String>(3);
+			equipmentItems.add(Material.LADDER + " 16");
+			equipmentItems.add(Material.WATER_BUCKET + " 5");
+			equipmentItems.add(Material.IRON_AXE + " 1");
 		configData.addDefault("firedepartment.equipment", equipmentItems);
 		configData.addDefault("firedepartment.signs.fontcolor", '4');
 		configData.addDefault("firedepartment.personnel.members", new ArrayList<String>());
@@ -42,14 +45,24 @@ public class Config {
 		configData.addDefault("firedepartment.dispatch.autoDispatch", true);
 		
 		configData.addDefault("firedepartment.units.fire-station1.name", "Station 1");
-		ArrayList<String> ids = new ArrayList<String>();
-		ids.add("3c331cf1-d8f1-417f-b3b3-0b7bc2f9b2c0");
-		configData.addDefault("firedepartment.units.fire-station1.members", ids);
+		configData.addDefault("firedepartment.units.fire-station1.members", new ArrayList<String>());
 		configData.addDefault("firedepartment.units.ems-central.name", "EMS Station Central");
 		configData.addDefault("firedepartment.units.ems-central.members", new ArrayList<String>());
 		
 		configData.options().copyDefaults(true);
 		plugin.saveConfig();
+	}
+	
+	public double getSingleMissionCompensation() {
+		return configData.getDouble("firedepartment.economy.singleMissionCompensation");
+	}
+	
+	public double getSalaryFirefighters() {
+		return configData.getDouble("firedepartment.economy.salary.firefighters");
+	}
+	
+	public double getSalaryDispatchers() {
+		return configData.getDouble("firedepartment.economy.salary.dispatchers");
 	}
 	
 	public ChatColor getSignFontColor() {
@@ -118,6 +131,104 @@ public class Config {
 		}
 		return result;
 	}
+	
+	public void removeFirefighter(Player p) {
+		List<Player> ffs = getFirefighters();
+		for(Player c : ffs) {
+			if(c.getUniqueId().equals(p.getUniqueId())) {
+				ffs.remove(c);
+				configData.set("firedepartment.personnel.members", ffs);
+				plugin.saveConfig();
+				return;
+			}
+		}
+	}
+	
+	public void addFirefighter(Player p) {
+		List<Player> ffs = getFirefighters();
+		ffs.add(p);
+		configData.set("firedepartment.personnel.members", ffs);
+		plugin.saveConfig();
+	}
+	
+	public void removeDispatcher(Player p) {
+		List<Player> dps = getDispatchers();
+		for(Player c : dps) {
+			if(c.getUniqueId().equals(p.getUniqueId())) {
+				dps.remove(c);
+				configData.set("firedepartment.personnel.dispatchers", dps);
+				plugin.saveConfig();
+				return;
+			}
+		}
+	}
+	
+	public void addDispatcher(Player p) {
+		List<Player> dps = getDispatchers();
+		dps.add(p);
+		configData.set("firedepartment.personnel.dispatchers", dps);
+		plugin.saveConfig();
+	}
+	
+	public boolean isFirefighter(Player p) {
+		for(Player c : getFirefighters()) {
+			if(c.getUniqueId().equals(p.getUniqueId())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean isDispatcher(Player p) {
+		for(Player c : getDispatchers()) {
+			if(c.getUniqueId().equals(p.getUniqueId())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean isMemberOfUnit(Player p, String unitName) {
+		for(Player c : getFirefightersInUnit(unitName)) {
+			if(c.getUniqueId().equals(p.getUniqueId())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void removeFromUnit(Player p, String unitName) {
+		List<Player> ffs = getFirefightersInUnit(unitName);
+		for(Player c : ffs) {
+			if(c.getUniqueId().equals(p.getUniqueId())) {
+				ffs.remove(c);
+				configData.set("firedepartment.units." + unitName + ".members", ffs);
+				plugin.saveConfig();
+				return;
+			}
+		}
+	}
+	
+	public void addToUnit(Player p, String unitName) {
+		List<Player> ffs = getFirefightersInUnit(unitName);
+		if (ffs != null) {
+			ffs.add(p);
+			configData.set("firedepartment.units." + unitName + ".members", ffs);
+			plugin.saveConfig();
+		}
+	}
+	
+	public void addUnit(String unitName, String unitDisplayName) {
+		configData.set("firedepartment.units." + unitName + ".name", unitDisplayName);
+		configData.set("firedepartment.units." + unitName + ".members", new ArrayList<Player>());
+		plugin.saveConfig();
+	}
+	
+	public void removeUnit(String unitName) {
+		configData.set("firedepartment.units." + unitName + ".name", null);
+		configData.set("firedepartment.units." + unitName + ".members", null);
+		plugin.saveConfig();
+	}	
 	
 	public boolean unitExist(String unitName) {
 		return configData.get("firedepartment.units." + unitName + ".members") != null;
