@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.blogspot.debukkitsblog.firefighterpro.worldguard.PlayerDomainWrapper;
-import com.blospot.debukkitsblog.firefighterpro.ui.UIManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class Mission {
@@ -71,8 +70,6 @@ public class Mission {
 		if(plugin.getFFConfig().unitExist(unitName)) {
 			// remember timestamp for statistics
 			if(this.timeStamps[1] == null) this.timeStamps[1] = currentTime();
-			// update scoreboards
-			updateScoreboards();
 			// send message to all members of the unit
 			plugin.getBroadcaster().broadcastToUnit(unitName, Messages.format(Messages.ALARM_MESSAGE_INTRO));
 			plugin.getBroadcaster().broadcastToUnit(unitName, Messages.format(getCallingCivilian().getDisplayName() + ": " + getEmergencyMessage()));
@@ -94,8 +91,6 @@ public class Mission {
 		}	
 		// remember timestamp for statistics
 		if(this.timeStamps[1] == null) this.timeStamps[1] = currentTime();
-		// update scoreboards
-		updateScoreboards();
 		// send message to all firefighters
 		plugin.getBroadcaster().broadcastToFirefighters(Messages.format(Messages.ALARM_MESSAGE_INTRO));
 		plugin.getBroadcaster().broadcastToFirefighters(Messages.format(getCallingCivilian().getDisplayName() + ": " + getEmergencyMessage() + " @ " + location.getWorld().getName() + " ( " + location.getBlockX() + " | " + location.getBlockY() + " | " + location.getBlockZ() + " )"));
@@ -146,7 +141,7 @@ public class Mission {
 		if(callingCivilian != null) callingCivilian.sendMessage(Messages.format(respondingFirefighter.getDisplayName() + " " + Messages.ALARM_INFO_FIREFIGHTER_RESPONDED));
 	}
 	
-	public void quit(Player quittingFirefighter) {		
+	public void quit(Player quittingFirefighter) {	
 		// confirm the quitting to the firefighter him-/herself and the dispatcher
 		quittingFirefighter.sendMessage(Messages.format(ChatColor.RED + quittingFirefighter.getDisplayName() + ChatColor.WHITE + " " + Messages.FIREFIGHTER_QUIT_MISSION));
 		if(dispatcher != null) dispatcher.sendMessage(Messages.format(ChatColor.RED + quittingFirefighter.getDisplayName() + ChatColor.WHITE + " " + Messages.FIREFIGHTER_QUIT_MISSION));
@@ -154,7 +149,7 @@ public class Mission {
 		quittingFirefighter.getInventory().setContents(firefightersInMission.get(quittingFirefighter.getUniqueId()));
 		quittingFirefighter.sendMessage(Messages.format(Messages.FIREFIGHTER_INVENTORY_RESTORED));
 		// Teleport back to fire station
-		quittingFirefighter.teleport(plugin.getFFConfig().getStationLocation());
+		quittingFirefighter.teleport(plugin.getFFConfig().getStationLocation());	
 	}	
 	
 	private void payCompensation(Player p) {
@@ -194,13 +189,6 @@ public class Mission {
 			}
 		}
 		return result;
-	}
-	
-	private void updateScoreboards() {
-		//TODO Make Scoreboards work
-		for(Player firefighter : getFirefighters()) {
-			firefighter.setScoreboard(UIManager.getScoreboard(this));
-		}
 	}
 	
 	public boolean hasBeenAtLocation(Player player) {

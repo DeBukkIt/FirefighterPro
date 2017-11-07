@@ -17,7 +17,7 @@ public class Config {
 	private final FirefighterPro plugin;
 	private FileConfiguration configData;
 	
-	public Config(FirefighterPro pPlugin, String configFilename) {
+	public Config(FirefighterPro pPlugin) {
 		plugin = pPlugin;
 		
 		// Loading (or creating the config file)

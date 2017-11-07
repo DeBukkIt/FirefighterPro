@@ -1,5 +1,6 @@
 package com.blogspot.debukkitsblog.firefighterpro.commands;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,7 +29,9 @@ public class CommandFF implements CommandExecutor {
 		if(args[0].equalsIgnoreCase("info")) {
 			sender.sendMessage(Messages.format(plugin.getDescription().getName() + " " + plugin.getDescription().getVersion()));
 			sender.sendMessage(Messages.format("made by " + plugin.getDescription().getAuthors().get(0) + " since October 2017"));
-			// TODO Print online statistics per unit
+			sender.sendMessage(Messages.format(ChatColor.GREEN + "Online: " + ChatColor.WHITE
+					+ plugin.getFFConfig().getFirefighters().size() + " firefighters and "
+					+ plugin.getFFConfig().getDispatchers().size() + " dispatchers"));
 			return true;
 		}
 		

@@ -24,7 +24,7 @@ public class FirefighterPro extends JavaPlugin {
 	public void onEnable() {
 		super.onEnable();
 		currentMission = null;
-		config = new Config(this, "config.yml");
+		config = new Config(this);
 		broadcaster = new Broadcaster(this);
 		Messages.initMessages();
 		

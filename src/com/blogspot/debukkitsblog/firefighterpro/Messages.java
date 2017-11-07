@@ -1,10 +1,7 @@
 package com.blogspot.debukkitsblog.firefighterpro;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Scanner;
 
@@ -149,8 +146,7 @@ public enum Messages {
 			} else {
 				
 				// if file already exists, read the content
-				
-				Scanner s = new Scanner(new BufferedReader(new InputStreamReader(new FileInputStream(langFile), "UTF-8")));
+				Scanner s = new Scanner(langFile,"UTF-8");
 				// Iterate every line of the file
 				while(s.hasNextLine()) {
 					String line = s.nextLine();
