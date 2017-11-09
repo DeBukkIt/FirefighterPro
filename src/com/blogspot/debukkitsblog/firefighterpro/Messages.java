@@ -57,6 +57,11 @@ public enum Messages {
 	MANAGER_UNIT_ADDED,
 	MANAGER_UNIT_REMOVED,
 	MANAGER_SALARIES_PAYED,
+	UI_HEADLINE,
+	UI_CALLING_CIVILIAN,
+	UI_DISPATCHER,
+	UI_UNITS_DISPATCHED,
+	UI_FIREFIGHTERS_RESPONDED,
 	YOU_HAVE_BEEN_REMOVED_FROM_UNIT,
 	YOU_ARE_NO_LONGER_A_FIREFIGHTER,
 	YOU_HAVE_BEEN_ASSIGNED_TO_UNIT,
@@ -116,6 +121,11 @@ public enum Messages {
 		MANAGER_UNIT_ADDED.setMessage("You created the unit");
 		MANAGER_UNIT_REMOVED.setMessage("You removed the unit");
 		MANAGER_SALARIES_PAYED.setMessage("Salaries have been payed to firefighters and dispatchers. Total value:");
+		UI_HEADLINE.setMessage(ChatColor.DARK_RED + "EMERGENCY MISSION");
+		UI_CALLING_CIVILIAN.setMessage("Calling Civilian");
+		UI_DISPATCHER.setMessage("Dispatcher");
+		UI_UNITS_DISPATCHED.setMessage("Units dispatched");
+		UI_FIREFIGHTERS_RESPONDED.setMessage("Firefighters responded");
 		YOU_ARE_A_DISAPTCHER.setMessage("Congratulations! You are a dispatcher now!");
 		YOU_ARE_NO_LONGER_A_DISPATCHER.setMessage("You are no longer a dispatcher.");
 		YOU_HAVE_BEEN_ASSIGNED_TO_UNIT.setMessage("You have been assigned to unit");

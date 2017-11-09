@@ -239,6 +239,10 @@ public class Config {
 		plugin.saveConfig();
 	}
 	
+	public String getUnitDisplayName(String unitName) {
+		return configData.getString("firedepartment.units." + unitName + ".name", null);
+	}
+	
 	public void removeUnit(String unitName) {
 		configData.set("firedepartment.units." + unitName + ".name", null);
 		configData.set("firedepartment.units." + unitName + ".members", null);

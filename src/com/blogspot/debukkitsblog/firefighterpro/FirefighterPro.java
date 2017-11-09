@@ -34,14 +34,14 @@ public class FirefighterPro extends JavaPlugin {
 		try {
 			worldGuardHandler = new WorldGuardHandler(this);
 		} catch(NoClassDefFoundError e) {
-			System.out.println(Messages.format("WorldGuard not found, working without WorldGuard support."));
+			System.out.println("WorldGuard not found, working without WorldGuard support.");
 		}
 		
 		setupEconomy();
 		if(isEconomySupported()) {
 			insurance = new Insurance(this);
 		} else {
-			System.out.println(Messages.format("Could not enable economy system, fire insurance and payment disabled."));
+			System.out.println("Could not enable economy system, fire insurance and payment disabled.");
 		}
 	}
 	
@@ -56,6 +56,7 @@ public class FirefighterPro extends JavaPlugin {
 		getCommand("ffdispatch").setExecutor(new CommandDispatch(this));
 		getCommand("ffmanage").setExecutor(new CommandManage(this));
 		getCommand("ffdebug").setExecutor(new CommandDebug(this));
+		// TODO Add a command to manage a fire insurance
 	}
 	
 	private boolean setupEconomy() {
