@@ -9,7 +9,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import com.blogspot.debukkitsblog.firefighterpro.FirefighterPro;
-import com.blogspot.debukkitsblog.firefighterpro.Messages;
+import com.blogspot.debukkitsblog.firefighterpro.util.Messages;
 
 public class CommandDispatch implements CommandExecutor {
 

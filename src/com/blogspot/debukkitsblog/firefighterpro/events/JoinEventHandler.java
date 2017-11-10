@@ -6,7 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.blogspot.debukkitsblog.firefighterpro.FirefighterPro;
-import com.blogspot.debukkitsblog.firefighterpro.Messages;
+import com.blogspot.debukkitsblog.firefighterpro.util.Messages;
 
 public class JoinEventHandler implements Listener {
 	

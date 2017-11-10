@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.blogspot.debukkitsblog.firefighterpro.FirefighterPro;
-import com.blogspot.debukkitsblog.firefighterpro.Messages;
+import com.blogspot.debukkitsblog.firefighterpro.util.Messages;
 
 public class CommandManage implements CommandExecutor {
 

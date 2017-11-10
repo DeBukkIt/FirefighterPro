@@ -1,8 +1,10 @@
-package com.blogspot.debukkitsblog.firefighterpro;
+package com.blogspot.debukkitsblog.firefighterpro.util;
 
 import java.util.List;
 
 import org.bukkit.entity.Player;
+
+import com.blogspot.debukkitsblog.firefighterpro.FirefighterPro;
 
 public class Broadcaster {
 	

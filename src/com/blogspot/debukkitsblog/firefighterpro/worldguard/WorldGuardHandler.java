@@ -10,8 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import com.blogspot.debukkitsblog.firefighterpro.FirefighterPro;
-import com.blogspot.debukkitsblog.firefighterpro.Messages;
 import com.blogspot.debukkitsblog.firefighterpro.Mission;
+import com.blogspot.debukkitsblog.firefighterpro.util.Messages;
 import com.sk89q.worldguard.bukkit.RegionContainer;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.domains.DefaultDomain;

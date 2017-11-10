@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
-import com.blogspot.debukkitsblog.Util.FileStorage;
 import com.blogspot.debukkitsblog.firefighterpro.FirefighterPro;
+import com.blogspot.debukkitsblog.firefighterpro.util.FileStorage;
 
 public class Insurance {
 
@@ -69,4 +69,5 @@ public class Insurance {
 	private void save() {
 		db.store("customers", customers);
 	}
+	
 }

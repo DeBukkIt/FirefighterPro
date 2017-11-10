@@ -1,4 +1,4 @@
-package com.blogspot.debukkitsblog.firefighterpro;
+package com.blogspot.debukkitsblog.firefighterpro.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
