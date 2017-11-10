@@ -30,6 +30,10 @@
     </plugins>
   </build>
   <repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
         <repository>
 	        <id>vault-repo</id>
 	        <url>http://nexus.hc.to/content/repositories/pub_releases</url>
@@ -64,6 +68,11 @@
   		<artifactId>VaultAPI</artifactId>
   		<version>1.6</version>
   	</dependency>
+  	<dependency>
+	    <groupId>com.github.DeBukkIt</groupId>
+	    <artifactId>SimpleFileStorage</artifactId>
+	    <version>master-SNAPSHOT</version>
+	</dependency>
   </dependencies>
   <url>https://dev.bukkit.org/projects/firefighterpro</url>
 </project>
