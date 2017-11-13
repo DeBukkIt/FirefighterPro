@@ -1,24 +1,19 @@
 package com.blogspot.debukkitsblog.firefighterpro.commands;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.blogspot.debukkitsblog.firefighterpro.FirefighterPro;
-import com.blogspot.debukkitsblog.firefighterpro.util.Messages;
+import com.blogspot.debukkitsblog.firefighterpro.Messages;
 
-public class CommandManage implements CommandExecutor {
-
-	private final FirefighterPro plugin;
+public class CommandManage extends FFProCommand {
 	
 	public CommandManage(FirefighterPro plugin) {
-		this.plugin = plugin;
+		super(plugin);
 	}
-	
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
@@ -224,15 +219,6 @@ public class CommandManage implements CommandExecutor {
 		}
 		
 		return true;
-	}
-	
-	private Player getPlayer(String playerName) {
-		for(OfflinePlayer c : Bukkit.getServer().getOfflinePlayers()) {
-			if(c.getName().equalsIgnoreCase(playerName)) {
-				return (Player) c;
-			}
-		}
-		return null;
 	}
 
 }

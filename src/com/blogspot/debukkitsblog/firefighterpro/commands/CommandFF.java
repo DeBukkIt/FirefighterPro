@@ -2,19 +2,16 @@ package com.blogspot.debukkitsblog.firefighterpro.commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.blogspot.debukkitsblog.firefighterpro.FirefighterPro;
-import com.blogspot.debukkitsblog.firefighterpro.util.Messages;
+import com.blogspot.debukkitsblog.firefighterpro.Messages;
 
-public class CommandFF implements CommandExecutor {
-
-	private final FirefighterPro plugin;
+public class CommandFF extends FFProCommand {
 
 	public CommandFF(FirefighterPro plugin) {
-		this.plugin = plugin;
+		super(plugin);
 	}
 
 	@Override

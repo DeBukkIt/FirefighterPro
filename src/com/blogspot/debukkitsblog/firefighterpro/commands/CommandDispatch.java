@@ -5,18 +5,16 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import com.blogspot.debukkitsblog.firefighterpro.FirefighterPro;
-import com.blogspot.debukkitsblog.firefighterpro.util.Messages;
+import com.blogspot.debukkitsblog.firefighterpro.Messages;
 
-public class CommandDispatch implements CommandExecutor {
-
-	private final FirefighterPro plugin;
+public class CommandDispatch extends FFProCommand {
 	
 	public CommandDispatch(FirefighterPro plugin) {
-		this.plugin = plugin;
+		super(plugin);
 	}
 	
 	@Override
@@ -33,7 +31,10 @@ public class CommandDispatch implements CommandExecutor {
 			// dispatch all firefighters
 			int resultAmount = plugin.getCurrentMission().dispatchAuto();
 			// inform all dispatchers (including command sender)
-			plugin.getBroadcaster().broadcastToDispatchers(Messages.format("[" + sender.getName() + "] " + ChatColor.GREEN + String.valueOf(resultAmount) + ChatColor.WHITE + " " + Messages.DISPATCH_UNITS_DISPATCHED));
+			plugin.getBroadcaster().broadcastToDispatchers(Messages.format(
+					"[" + sender.getName() + "] " + ChatColor.GREEN + String.valueOf(resultAmount)
+					+ ChatColor.WHITE + " " + Messages.DISPATCH_UNITS_DISPATCHED
+			));
 			return true;
 		}
 		
@@ -43,6 +44,36 @@ public class CommandDispatch implements CommandExecutor {
 			plugin.getCurrentMission().end();
 			sender.sendMessage(Messages.format(Messages.MISSION_ENDED));
 			return true;
+		} else if(args[0].equalsIgnoreCase("-payoutInsurance")) {
+			// number of arguments correct
+			if(args.length == 2) {
+				// economy supported (Vault installed)
+				if(plugin.isEconomySupported()) {
+					// find target player
+					Player target = getPlayer(args[1]);
+					if(target != null) {
+						// is target player insured at all?
+						if(plugin.getInsurance().isInsured(target)) {
+							plugin.getInsurance().toCustomer(target).payoffSumInsured();
+							sender.sendMessage(Messages.format(Messages.INSURANCE_SUM_PAYED_OUT.getMessage()
+									.replaceAll("%p", target.getDisplayName())
+									.replaceAll("%a", String.valueOf(plugin.getInsurance().toCustomer(target).getSumInsured()))
+							));
+							target.sendMessage(Messages.format(Messages.INSURANCE_SUM_RECEIVED.getMessage()
+									.replaceAll("%a", String.valueOf(plugin.getInsurance().toCustomer(target).getSumInsured()))
+							));
+						} else {
+							sender.sendMessage(Messages.format(Messages.INSURANCE_TARGET_NOT_INSURED));
+						}
+					} else {
+						sender.sendMessage(Messages.format(Messages.ERROR_PLAYER_NOT_FOUND));
+					}
+				} else {
+					sender.sendMessage(Messages.format(Messages.ERROR_VAULT_NOT_INSTALLED));
+				}
+			} else {
+				return false;
+			}
 		}
 		
 		List<String> units = new ArrayList<String>(3);

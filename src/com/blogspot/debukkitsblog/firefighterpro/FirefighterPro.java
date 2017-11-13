@@ -6,9 +6,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.blogspot.debukkitsblog.firefighterpro.commands.*;
 import com.blogspot.debukkitsblog.firefighterpro.events.SignEventHandler;
 import com.blogspot.debukkitsblog.firefighterpro.insurance.Insurance;
-import com.blogspot.debukkitsblog.firefighterpro.util.Broadcaster;
-import com.blogspot.debukkitsblog.firefighterpro.util.Config;
-import com.blogspot.debukkitsblog.firefighterpro.util.Messages;
 import com.blogspot.debukkitsblog.firefighterpro.worldguard.WorldGuardHandler;
 
 import net.milkbowl.vault.economy.Economy;
@@ -58,8 +55,7 @@ public class FirefighterPro extends JavaPlugin {
 		getCommand("ff").setExecutor(new CommandFF(this));
 		getCommand("ffdispatch").setExecutor(new CommandDispatch(this));
 		getCommand("ffmanage").setExecutor(new CommandManage(this));
-		getCommand("ffdebug").setExecutor(new CommandDebug(this));
-		// TODO Add a command to manage a fire insurance
+		getCommand("ffinsurance").setExecutor(new CommandInsurance(this));
 	}
 	
 	private boolean setupEconomy() {

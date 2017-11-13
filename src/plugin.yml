@@ -6,7 +6,7 @@ authors: [DeBukkIt]
 website: http://debukkitsblog.blogspot.com
 main: com.blogspot.debukkitsblog.firefighterpro.FirefighterPro
 prefix: FFPro
-softdepend: [WorldGuard]
+softdepend: [WorldGuard, WorldEdit, Vault]
 commands:
      alarm:
           description: Calls the fire department in case to your location
@@ -19,12 +19,12 @@ commands:
      ffmanage:
           description: Manages a fire department
           permission: ffpro.manager
-          usage: /<command> <setStation> | (<setAutodispatch> true|false) | (<firefighterAdd|firefighterRemove> <firefighter>) | (<dispatcherAdd|dispatcherRemove> <dispatcher>) | (<unitAdd|unitRemove> <unit>) | assignToUnit <firefighter> <unit> | removeFromUnit <firefighter> <unit> | paySalaries
+          usage: /<command> setStation | (setAutodispatch (true|false)) | (firefighterAdd <player>) | (firefighterRemove <player>) | (dispatcherAdd <player>) | (dispatcherRemove <player>) | (unitAdd <unitShortName> <unitDisplayName>) | (unitRemove <unitShortName>) | (assignToUnit <firefighter> <unitShortName>) | (removeFromUnit <firefighter> <unitShortName>) | paySalaries
      ffdispatch:
           description: Reacts to a call of a civilian in danger
           permission: ffpro.dispatcher
-          usage: /<command> ([<unit1> [<unit2> [...]]] [-m <infoMessage>]) | -end
-     ffdebug:
-          description: Debugs this plugin, remove command before release
-          permission: ffpro.debug
-          usage: /<command>
+          usage: /<command> ([<unitShortName1> [<unitShortName2> [...]]] [-m <infoMessage>]) | -end | -payoutInsurance <insuredPlayer>
+     ffinsurance:
+          description: Manages a fire insurance contract
+          permission: ffpro.insurance
+          usage: /<command> (contract <installment> <dayInterval>)|cancel

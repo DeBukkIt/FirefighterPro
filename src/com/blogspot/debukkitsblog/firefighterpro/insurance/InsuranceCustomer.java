@@ -3,7 +3,7 @@ package com.blogspot.debukkitsblog.firefighterpro.insurance;
 import org.bukkit.entity.Player;
 
 import com.blogspot.debukkitsblog.firefighterpro.FirefighterPro;
-import com.blogspot.debukkitsblog.firefighterpro.util.Messages;
+import com.blogspot.debukkitsblog.firefighterpro.Messages;
 
 public class InsuranceCustomer {
 	

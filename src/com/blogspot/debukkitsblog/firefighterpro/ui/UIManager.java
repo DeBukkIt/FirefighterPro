@@ -11,8 +11,8 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 
+import com.blogspot.debukkitsblog.firefighterpro.Messages;
 import com.blogspot.debukkitsblog.firefighterpro.Mission;
-import com.blogspot.debukkitsblog.firefighterpro.util.Messages;
 
 public class UIManager {
 	

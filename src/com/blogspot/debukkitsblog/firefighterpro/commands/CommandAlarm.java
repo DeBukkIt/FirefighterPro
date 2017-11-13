@@ -2,20 +2,17 @@ package com.blogspot.debukkitsblog.firefighterpro.commands;
 
 import org.bukkit.Location;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.blogspot.debukkitsblog.firefighterpro.FirefighterPro;
+import com.blogspot.debukkitsblog.firefighterpro.Messages;
 import com.blogspot.debukkitsblog.firefighterpro.Mission;
-import com.blogspot.debukkitsblog.firefighterpro.util.Messages;
 
-public class CommandAlarm implements CommandExecutor {
-
-	private final FirefighterPro plugin;
+public class CommandAlarm extends FFProCommand {
 	
 	public CommandAlarm(FirefighterPro plugin) {
-		this.plugin = plugin;
+		super(plugin);
 	}
 	
 	@Override

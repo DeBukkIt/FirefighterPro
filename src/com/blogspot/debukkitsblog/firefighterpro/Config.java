@@ -1,4 +1,4 @@
-package com.blogspot.debukkitsblog.firefighterpro.util;
+package com.blogspot.debukkitsblog.firefighterpro;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,8 +11,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import com.blogspot.debukkitsblog.firefighterpro.FirefighterPro;
 
 public class Config {
 	

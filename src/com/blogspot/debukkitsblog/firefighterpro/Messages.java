@@ -1,4 +1,4 @@
-package com.blogspot.debukkitsblog.firefighterpro.util;
+package com.blogspot.debukkitsblog.firefighterpro;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -44,6 +44,13 @@ public enum Messages {
 	INFO_HEADLINE_FIREFIGHTERS_UNIT,
 	INSURANCE_PAYED,
 	INSURANCE_INFORMATION,
+	INSURANCE_CANCELLED,
+	INSURANCE_NOT_INSURED,
+	INSURANCE_TARGET_NOT_INSURED,
+	INSURANCE_ALREADY_INSURED,
+	INSURANCE_CONTRACTED,
+	INSURANCE_SUM_PAYED_OUT,
+	INSURANCE_SUM_RECEIVED,
 	MANAGER_FIRESTATION_LOCATION_SET,
 	MANAGER_FIRESTATION_LOCATION_SET_FOR_FIREFIGHTERS,
 	MANAGER_AUTODISPATCH_ON,
@@ -57,6 +64,7 @@ public enum Messages {
 	MANAGER_UNIT_ADDED,
 	MANAGER_UNIT_REMOVED,
 	MANAGER_SALARIES_PAYED,
+	MISSION_ENDED,
 	UI_HEADLINE,
 	UI_CALLING_CIVILIAN,
 	UI_DISPATCHER,
@@ -67,8 +75,7 @@ public enum Messages {
 	YOU_HAVE_BEEN_ASSIGNED_TO_UNIT,
 	YOU_ARE_A_FIREFIGHTER,
 	YOU_ARE_A_DISAPTCHER,
-	YOU_ARE_NO_LONGER_A_DISPATCHER,
-	MISSION_ENDED;
+	YOU_ARE_NO_LONGER_A_DISPATCHER;
 	
 	private String message;
 	
@@ -81,6 +88,8 @@ public enum Messages {
 		ALARM_MESSAGE_FIREFIGHTER_HELP_ROGER.setMessage("Use " + ChatColor.GREEN + "/ff roger" + ChatColor.WHITE + " to confirm the alarm!");
 		ALARM_INFO_FIREFIGHTER_ROGERED.setMessage("confirmed your emergency call and is en route to the fire station now!");
 		ALARM_INFO_FIREFIGHTER_RESPONDED.setMessage("responed to your call and is currently arriving at the site. Keep calm!");
+		DISPATCH_UNITS_DISPATCHED.setMessage("firefighters dispatched.");
+		DISPATCH_FIREFIGHTER_ROGERED.setMessage("Roger that! En route to the fire station.");
 		ERROR_FIRE_DEPT_NOT_AVAILABLE.setMessage("The fire brigade is currently unavailable due to another call. Please try again later!");
 		ERROR_COMMAND_NO_CONSOLE.setMessage("This command can only be sent by a player");
 		ERROR_DISPATCH_UNIT_NOT_EXIST.setMessage("does not exist. Dispatch cancelled. Edit your command first!");
@@ -97,17 +106,22 @@ public enum Messages {
 		ERROR_IS_ALREADY_DISPATCHER.setMessage("This player is already a dispatcher.");
 		ERROR_UNIT_ALREADY_EXISTS.setMessage("This unit already exists.");
 		ERROR_VAULT_NOT_INSTALLED.setMessage("Economy is not supported on this server. Plugin 'Vault' is missing.");
-		DISPATCH_UNITS_DISPATCHED.setMessage("firefighters dispatched.");
-		DISPATCH_FIREFIGHTER_ROGERED.setMessage("Roger that! En route to the fire station.");
+		FIREFIGHTER_EQUIPPED.setMessage("You have been equipped with your most necessary equipment. You'll get your things back later using /ff quit");
+		FIREFIGHTER_RESPONDED.setMessage("has moved out and has approached the site");
+		FIREFIGHTER_QUIT_MISSION.setMessage("quit the mission and returned to base.");
+		FIREFIGHTER_INVENTORY_RESTORED.setMessage("You inventory has been restored.");
 		INFO_HEADLINE_DISPATCHERS.setMessage("# Information message for all Dispatchers ++");
 		INFO_HEADLINE_FIREFIGHTERS_ALL.setMessage("# Information message for all Firefighters ++");
 		INFO_HEADLINE_FIREFIGHTERS_UNIT.setMessage("# Information message for firefighters in unit");
 		INSURANCE_PAYED.setMessage("Your insurance contribution has been withdrawn. The next one is due in %d days.");
 		INSURANCE_INFORMATION.setMessage("You are insured for fire damage with an insurance fee of %ai euros every %di days and receive %as euros in case of damage. The next installment is due in %dr days.");
-		FIREFIGHTER_EQUIPPED.setMessage("You have been equipped with your most necessary equipment. You'll get your things back later using /ff quit");
-		FIREFIGHTER_RESPONDED.setMessage("has moved out and has approached the site");
-		FIREFIGHTER_QUIT_MISSION.setMessage("quit the mission and returned to base.");
-		FIREFIGHTER_INVENTORY_RESTORED.setMessage("You inventory has been restored.");
+		INSURANCE_CANCELLED.setMessage("You successfully cancelled your fire insurance.");
+		INSURANCE_NOT_INSURED.setMessage("You are not insured yet.");
+		INSURANCE_TARGET_NOT_INSURED.setMessage("This player does not have insurance.");
+		INSURANCE_ALREADY_INSURED.setMessage("You are already insured. Cancel your current insurance first!");
+		INSURANCE_CONTRACTED.setMessage("You are fire insured now. In case of damage you will receive a compensation of");
+		INSURANCE_SUM_PAYED_OUT.setMessage("The fire insurance payed %p an insurance sum of %a");
+		INSURANCE_SUM_RECEIVED.setMessage("You received an insurance sum of %a");
 		MANAGER_FIRESTATION_LOCATION_SET.setMessage("You set a new location for the fire station.");
 		MANAGER_FIRESTATION_LOCATION_SET_FOR_FIREFIGHTERS.setMessage("A new fire station has been set at");
 		MANAGER_AUTODISPATCH_ON.setMessage("Autodispatch has been turned on. Alarms will be dispatched to every firefighter automatically now.");
@@ -121,6 +135,7 @@ public enum Messages {
 		MANAGER_UNIT_ADDED.setMessage("You created the unit");
 		MANAGER_UNIT_REMOVED.setMessage("You removed the unit");
 		MANAGER_SALARIES_PAYED.setMessage("Salaries have been payed to firefighters and dispatchers. Total value:");
+		MISSION_ENDED.setMessage("The mission is finished, the place of deployment has been handed over to the owner.");
 		UI_HEADLINE.setMessage(ChatColor.DARK_RED + "EMERGENCY MISSION");
 		UI_CALLING_CIVILIAN.setMessage("Calling Civilian");
 		UI_DISPATCHER.setMessage("Dispatcher");
@@ -132,7 +147,6 @@ public enum Messages {
 		YOU_HAVE_BEEN_REMOVED_FROM_UNIT.setMessage("You have been removed from unit");
 		YOU_ARE_A_FIREFIGHTER.setMessage("Congratulations! You are a firefighter now!");
 		YOU_ARE_NO_LONGER_A_FIREFIGHTER.setMessage("You are no longer a firefighter.");
-		MISSION_ENDED.setMessage("The mission is finished, the place of deployment has been handed over to the owner.");
 		
 		// Write language file to allow users to add a translation
 		String content = "### Do not use the Windows Notepad for editing, because it ignores the (really important) line breaks in this file ###\n" 
