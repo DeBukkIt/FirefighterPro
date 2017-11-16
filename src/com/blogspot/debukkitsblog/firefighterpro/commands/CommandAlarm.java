@@ -11,10 +11,6 @@ import com.blogspot.debukkitsblog.firefighterpro.Mission;
 
 public class CommandAlarm extends FFProCommand {
 	
-	public CommandAlarm(FirefighterPro plugin) {
-		super(plugin);
-	}
-	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
@@ -22,15 +18,15 @@ public class CommandAlarm extends FFProCommand {
 			Player playerSender = (Player) sender;
 			
 			// Only one mission at a time is permitted
-			if(plugin.getCurrentMission() != null && !plugin.getCurrentMission().isOver()) {
+			if(FirefighterPro.getInstance().getCurrentMission() != null && !FirefighterPro.getInstance().getCurrentMission().isOver()) {
 				sender.sendMessage(Messages.format(Messages.ERROR_FIRE_DEPT_NOT_AVAILABLE));
 				return true;
 			}
 			
 			if(args.length == 0) {
 				// No alarm message provided
-				Mission mission = new Mission(plugin, Messages.ALARM_MESSAGE_CONTENT_DEFAULT.getMessage(), playerSender.getLocation(), playerSender);
-				plugin.setCurrentMission(mission);
+				Mission mission = new Mission(Messages.ALARM_MESSAGE_CONTENT_DEFAULT.getMessage(), playerSender.getLocation(), playerSender);
+				FirefighterPro.getInstance().setCurrentMission(mission);
 				broadcastAlarm(mission);
 			} else {
 				// Alarm message provided in args
@@ -38,12 +34,16 @@ public class CommandAlarm extends FFProCommand {
 				for(String word : args) {
 					message += word + " ";
 				}
-				Mission mission = new Mission(plugin, message, playerSender.getLocation(), playerSender);
-				plugin.setCurrentMission(mission);
+				Mission mission = new Mission(message, playerSender.getLocation(), playerSender);
+				FirefighterPro.getInstance().setCurrentMission(mission);
 				broadcastAlarm(mission);				
 			}
 			
 			playerSender.sendMessage(Messages.format(Messages.ALARM_MESSAGE_FD_INFORMED));
+			
+			if(FirefighterPro.getInstance().isEconomySupported()) {
+				FirefighterPro.getInstance().getEconomy().withdraw(playerSender, FirefighterPro.getInstance().getFFConfig().getEmergencyCallFee());
+			}
 			
 		} else {
 			sender.sendMessage(Messages.format(Messages.ERROR_COMMAND_NO_CONSOLE));
@@ -54,16 +54,16 @@ public class CommandAlarm extends FFProCommand {
 	
 	private void broadcastAlarm(Mission mission) {
 		
-		if(plugin.getFFConfig().getAutodispatch()) {
+		if(FirefighterPro.getInstance().getFFConfig().getAutodispatch()) {
 			// Dispatch without waiting for a dispatcher to dispatch
 			mission.dispatchAuto();
 		} else {
 			// Inform only the dispatchers
 			Location location = mission.getLocation();
-			plugin.getBroadcaster().broadcastToDispatchers(Messages.format(Messages.ALARM_MESSAGE_INTRO));
-			plugin.getBroadcaster().broadcastToDispatchers(Messages.format(mission.getCallingCivilian().getDisplayName() + ": " + mission.getEmergencyMessage()));
-			plugin.getBroadcaster().broadcastToDispatchers(Messages.format("@ " + location.getWorld() + ", (" + location.getBlockX() + "|" + location.getBlockY() + "|" + location.getBlockZ() + ")"));
-			plugin.getBroadcaster().broadcastToDispatchers(Messages.format(Messages.ALARM_MESSAGE_DISPATCHER_HELP));			
+			FirefighterPro.getInstance().getBroadcaster().broadcastToDispatchers(Messages.format(Messages.ALARM_MESSAGE_INTRO));
+			FirefighterPro.getInstance().getBroadcaster().broadcastToDispatchers(Messages.format(mission.getCallingCivilian().getDisplayName() + ": " + mission.getEmergencyMessage()));
+			FirefighterPro.getInstance().getBroadcaster().broadcastToDispatchers(Messages.format("@ " + location.getWorld() + ", (" + location.getBlockX() + "|" + location.getBlockY() + "|" + location.getBlockZ() + ")"));
+			FirefighterPro.getInstance().getBroadcaster().broadcastToDispatchers(Messages.format(Messages.ALARM_MESSAGE_DISPATCHER_HELP));			
 		}	
 		
 	}

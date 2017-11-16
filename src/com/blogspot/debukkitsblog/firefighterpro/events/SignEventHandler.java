@@ -21,16 +21,13 @@ import com.blogspot.debukkitsblog.firefighterpro.FirefighterPro;
 
 public class SignEventHandler implements Listener {
 	
-	private final FirefighterPro plugin;
 	private HashMap<String, String> signCommands;
 	
 	private Block lastInteractRedstoneBlock;
 	private Player lastInteractRedstonePlayer;
 	private List<Block> checkedRedstoneBlocks = new ArrayList<Block>();
 	
-	public SignEventHandler(FirefighterPro plugin) {
-		this.plugin = plugin;
-		
+	public SignEventHandler() {
 		signCommands = new HashMap<String, String>();
 		signCommands.put("[Alarm]", "alarm");
 		signCommands.put("[FF Equip]", "ff equip");
@@ -45,7 +42,7 @@ public class SignEventHandler implements Listener {
 		// check first line for all possible commands, replace with color if matches
 		for (String commandName : signCommands.keySet()) {
 			if (event.getLine(0).equalsIgnoreCase(commandName)) {
-				event.setLine(0, (plugin.getFFConfig().getSignFontColor() != null ? plugin.getFFConfig().getSignFontColor() : ChatColor.DARK_RED) + commandName);
+				event.setLine(0, (FirefighterPro.getInstance().getFFConfig().getSignFontColor() != null ? FirefighterPro.getInstance().getFFConfig().getSignFontColor() : ChatColor.DARK_RED) + commandName);
 				break;
 			}
 		}
@@ -65,7 +62,7 @@ public class SignEventHandler implements Listener {
 		// is the block a sign at all?
 		if (isSign(event.getClickedBlock())) {
 			Sign sign = (Sign) event.getClickedBlock().getState();
-			ChatColor signFontColor = (plugin.getFFConfig().getSignFontColor() != null ? plugin.getFFConfig().getSignFontColor() : ChatColor.DARK_RED);
+			ChatColor signFontColor = (FirefighterPro.getInstance().getFFConfig().getSignFontColor() != null ? FirefighterPro.getInstance().getFFConfig().getSignFontColor() : ChatColor.DARK_RED);
 			
 			// is the sign a FirefighterPro command sign?
 			if(isCommandSign(sign)) {
@@ -188,7 +185,7 @@ public class SignEventHandler implements Listener {
 	}
 	
 	private boolean isCommandSign(Sign sign) {
-		ChatColor signFontColor = (plugin.getFFConfig().getSignFontColor() != null ? plugin.getFFConfig().getSignFontColor() : ChatColor.DARK_RED);
+		ChatColor signFontColor = (FirefighterPro.getInstance().getFFConfig().getSignFontColor() != null ? FirefighterPro.getInstance().getFFConfig().getSignFontColor() : ChatColor.DARK_RED);
 		for (String commandName : signCommands.keySet()) {
 			if (sign.getLine(0).equalsIgnoreCase(signFontColor + commandName)) {
 				return true;

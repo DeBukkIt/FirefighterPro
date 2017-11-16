@@ -1,22 +1,29 @@
-package com.blogspot.debukkitsblog.firefighterpro.insurance;
+package com.blogspot.debukkitsblog.firefighterpro.economy;
 
+import java.io.Serializable;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.blogspot.debukkitsblog.firefighterpro.FirefighterPro;
 import com.blogspot.debukkitsblog.firefighterpro.Messages;
 
-public class InsuranceCustomer {
+public class InsuranceCustomer implements Serializable {
 	
-	private FirefighterPro plugin;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1324977460455182396L;
 	
-	private Player player; // the insured player
+	private UUID playerID; // the insured player
 	private int installment; // the amount to be paid regularly
 	private int sumInsured; // the sum that is paid out in the event of damage.
 	private int dayInterval; // the interval of payments
 	private long nextPayday; // the next payday in milliseconds of UNIX time
 
-	public InsuranceCustomer(Player player, int installment, int sumInsured, int dayInterval, FirefighterPro plugin) {
-		this.player = player;
+	public InsuranceCustomer(Player player, int installment, int sumInsured, int dayInterval) {
+		this.playerID = player.getUniqueId();
 		this.installment = installment;
 		this.sumInsured = sumInsured;
 		this.dayInterval = dayInterval;
@@ -24,7 +31,7 @@ public class InsuranceCustomer {
 	}
 	
 	public void sendInsuranceInformation() {
-		player.sendMessage(Messages.format(Messages.INSURANCE_INFORMATION.getMessage()
+		Bukkit.getServer().getPlayer(playerID).sendMessage(Messages.format(Messages.INSURANCE_INFORMATION.getMessage()
 				.replaceAll("%ai", "" + installment)
 				.replaceAll("%di", "" + dayInterval)
 				.replaceAll("%as", "" + sumInsured)
@@ -40,21 +47,25 @@ public class InsuranceCustomer {
 		return System.currentTimeMillis() > nextPayday;
 	}
 	
-	public void payInstallment() {
-		if(plugin.isEconomySupported() && getDaysToNextPayday() >= 0) {
-			plugin.getEconomy().withdrawPlayer(player, installment);
-			nextPayday += daysToMillis(dayInterval);
+	public void payInstallment() {		
+		if(FirefighterPro.getInstance().isEconomySupported() && getDaysToNextPayday() <= 0) {
+			if (FirefighterPro.getInstance().getEconomy().withdraw(Bukkit.getServer().getPlayer(playerID), installment)) {
+				nextPayday += daysToMillis(dayInterval);
+				Bukkit.getPlayer(playerID).sendMessage(Messages.format(Messages.INSURANCE_PAYED)
+						.replaceAll("%d", String.valueOf(getDaysToNextPayday())
+				));
+			}
 		}
 	}
 	
 	public void payoffSumInsured() {
-		if(plugin.isEconomySupported()) {
-			plugin.getEconomy().depositPlayer(player, sumInsured);
+		if(FirefighterPro.getInstance().isEconomySupported()) {
+			FirefighterPro.getInstance().getEconomy().deposit(Bukkit.getServer().getPlayer(playerID), sumInsured);
 		}
 	}
 	
 	public Player getPlayer() {
-		return player;
+		return Bukkit.getServer().getPlayer(playerID);
 	}
 	
 	public int getInstallment() {

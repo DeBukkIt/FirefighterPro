@@ -24,8 +24,6 @@ public class Mission {
 	public static final int EVENT_FIRST_FIREFIGHTER_ROGER = 2;
 	public static final int EVENT_FIRST_FIREFIGHTER_RESPOND = 3;
 	public static final int EVENT_MISSION_END = 4;
-	
-	private FirefighterPro plugin;
 
 	private Player callingCivilian;
 	private String emergencyMessage;
@@ -42,8 +40,7 @@ public class Mission {
 	private ProtectedRegion region;
 	private PlayerDomainWrapper regionOldMembers;
 	
-	public Mission(FirefighterPro plugin, String emergencyMessage, Location location, Player callingCivilian) {
-		this.plugin = plugin;
+	public Mission(String emergencyMessage, Location location, Player callingCivilian) {
 		this.emergencyMessage = emergencyMessage;
 		this.location = location;
 		this.callingCivilian = callingCivilian;
@@ -69,21 +66,21 @@ public class Mission {
 			return -2;
 		}
 		// Allow firefighters to build in the emergency's WorldGuard region
-		if(plugin.isWorldGuardSupported() && !buildingAllowed) {
-			plugin.getWorldGuardHandler().setAllowBuild(location, this);
+		if(FirefighterPro.getInstance().isWorldGuardSupported() && !buildingAllowed) {
+			FirefighterPro.getInstance().getWorldGuardHandler().setAllowBuild(location, this);
 			buildingAllowed = true;
 		}
 		// check whether unit exists
-		if(plugin.getFFConfig().unitExist(unitName)) {
+		if(FirefighterPro.getInstance().getFFConfig().unitExist(unitName)) {
 			// remember timestamp for statistics
 			if(this.timeStamps[1] == null) this.timeStamps[1] = currentTime();
 			// remember what unit has been dispatched
-			unitsInMission.add(plugin.getFFConfig().getUnitDisplayName(unitName));
+			unitsInMission.add(FirefighterPro.getInstance().getFFConfig().getUnitDisplayName(unitName));
 			// send message to all members of the unit
-			plugin.getBroadcaster().broadcastToUnit(unitName, Messages.format(Messages.ALARM_MESSAGE_INTRO));
-			plugin.getBroadcaster().broadcastToUnit(unitName, Messages.format(getCallingCivilian().getDisplayName() + ": " + getEmergencyMessage()));
-			plugin.getBroadcaster().broadcastToUnit(unitName, Messages.format("@ " + location.getWorld() + ", (" + location.getBlockX() + "|" + location.getBlockY() + "|" + location.getBlockZ() + ")"));
-			return plugin.getBroadcaster().broadcastToUnit(unitName, Messages.format(additionalMessage));
+			FirefighterPro.getInstance().getBroadcaster().broadcastToUnit(unitName, Messages.format(Messages.ALARM_MESSAGE_INTRO));
+			FirefighterPro.getInstance().getBroadcaster().broadcastToUnit(unitName, Messages.format(getCallingCivilian().getDisplayName() + ": " + getEmergencyMessage()));
+			FirefighterPro.getInstance().getBroadcaster().broadcastToUnit(unitName, Messages.format("@ " + location.getWorld() + ", (" + location.getBlockX() + "|" + location.getBlockY() + "|" + location.getBlockZ() + ")"));
+			return FirefighterPro.getInstance().getBroadcaster().broadcastToUnit(unitName, Messages.format(additionalMessage));
 		}
 		return -1; // if the unit does not exist
 	}
@@ -94,8 +91,8 @@ public class Mission {
 			return -2;
 		}
 		// Allow firefighters to build in the emergency's WorldGuard region
-		if(plugin.isWorldGuardSupported() && !buildingAllowed) {
-			plugin.getWorldGuardHandler().setAllowBuild(location, this);
+		if(FirefighterPro.getInstance().isWorldGuardSupported() && !buildingAllowed) {
+			FirefighterPro.getInstance().getWorldGuardHandler().setAllowBuild(location, this);
 			buildingAllowed = true;
 		}	
 		// remember timestamp for statistics
@@ -103,16 +100,16 @@ public class Mission {
 		// remember what unit has been dispatched
 		unitsInMission.add("All units");
 		// send message to all firefighters
-		plugin.getBroadcaster().broadcastToFirefighters(Messages.format(Messages.ALARM_MESSAGE_INTRO));
-		plugin.getBroadcaster().broadcastToFirefighters(Messages.format(getCallingCivilian().getDisplayName() + ": " + getEmergencyMessage() + " @ " + location.getWorld().getName() + " ( " + location.getBlockX() + " | " + location.getBlockY() + " | " + location.getBlockZ() + " )"));
-		return plugin.getBroadcaster().broadcastToFirefighters(Messages.format(Messages.ALARM_MESSAGE_FIREFIGHTER_HELP_ROGER));
+		FirefighterPro.getInstance().getBroadcaster().broadcastToFirefighters(Messages.format(Messages.ALARM_MESSAGE_INTRO));
+		FirefighterPro.getInstance().getBroadcaster().broadcastToFirefighters(Messages.format(getCallingCivilian().getDisplayName() + ": " + getEmergencyMessage() + " @ " + location.getWorld().getName() + " ( " + location.getBlockX() + " | " + location.getBlockY() + " | " + location.getBlockZ() + " )"));
+		return FirefighterPro.getInstance().getBroadcaster().broadcastToFirefighters(Messages.format(Messages.ALARM_MESSAGE_FIREFIGHTER_HELP_ROGER));
 	}
 	
 	public void roger(Player rogeringFirefighter) {
 		this.timeStamps[2] = currentTime();
 		manpower++;
 		// Teleport the firefighter
-		rogeringFirefighter.teleport(plugin.getFFConfig().getStationLocation());
+		rogeringFirefighter.teleport(FirefighterPro.getInstance().getFFConfig().getStationLocation());
 		// Notify the civilian waiting for help
 		if(callingCivilian != null) callingCivilian.sendMessage(Messages.format(ChatColor.GREEN + rogeringFirefighter.getDisplayName() + ChatColor.WHITE + " " + Messages.ALARM_INFO_FIREFIGHTER_ROGERED));
 		// Notify the dispatcher who 
@@ -123,7 +120,7 @@ public class Mission {
 	
 	public void equip(Player equippingFirefighter) {
 		// load equipment
-		ArrayList<ItemStack> equipment = plugin.getFFConfig().getEquipment();
+		ArrayList<ItemStack> equipment = FirefighterPro.getInstance().getFFConfig().getEquipment();
 		if(equipment != null) {
 			// save and empty inventory
 			firefightersInMission.put(equippingFirefighter.getUniqueId(), equippingFirefighter.getInventory().getContents());
@@ -162,7 +159,7 @@ public class Mission {
 		quittingFirefighter.getInventory().setContents(firefightersInMission.get(quittingFirefighter.getUniqueId()));
 		quittingFirefighter.sendMessage(Messages.format(Messages.FIREFIGHTER_INVENTORY_RESTORED));
 		// Teleport back to fire station
-		quittingFirefighter.teleport(plugin.getFFConfig().getStationLocation());
+		quittingFirefighter.teleport(FirefighterPro.getInstance().getFFConfig().getStationLocation());
 		firefightersInMission.remove(quittingFirefighter.getUniqueId());
 		// Update scoreboard
 		updateScoreboards();
@@ -177,8 +174,10 @@ public class Mission {
 	}
 	
 	private void payCompensation(Player p) {
-		if(plugin.isEconomySupported()) {
-			plugin.getEconomy().depositPlayer(p, plugin.getFFConfig().getSingleMissionCompensation());
+		if(FirefighterPro.getInstance().isEconomySupported()) {
+			if(FirefighterPro.getInstance().getEconomy().deposit(p, FirefighterPro.getInstance().getFFConfig().getSingleMissionCompensation())) {
+				p.sendMessage(Messages.format(Messages.FIREFIGHTER_COMPENSATION_PAYEDOFF));
+			}
 		}
 	}
 	
@@ -186,14 +185,14 @@ public class Mission {
 		// mark the mission as over
 		isOver = true;
 		// Deny firefighters to build in the emergency's region, reset old members
-		if(plugin.isWorldGuardSupported()) {
-			plugin.getWorldGuardHandler().setOldBuildPermissions(location, this);
+		if(FirefighterPro.getInstance().isWorldGuardSupported()) {
+			FirefighterPro.getInstance().getWorldGuardHandler().setOldBuildPermissions(location, this);
 		}
 		// send end message to every firefighter and dispatcher
-		plugin.getBroadcaster().broadcastToDispatchers(Messages.format(Messages.INFO_HEADLINE_DISPATCHERS));
-		plugin.getBroadcaster().broadcastToDispatchers(Messages.format(Messages.MISSION_ENDED));
-		plugin.getBroadcaster().broadcastToFirefighters(Messages.format(Messages.INFO_HEADLINE_FIREFIGHTERS_ALL));
-		plugin.getBroadcaster().broadcastToFirefighters(Messages.format(Messages.MISSION_ENDED));
+		FirefighterPro.getInstance().getBroadcaster().broadcastToDispatchers(Messages.format(Messages.INFO_HEADLINE_DISPATCHERS));
+		FirefighterPro.getInstance().getBroadcaster().broadcastToDispatchers(Messages.format(Messages.MISSION_ENDED));
+		FirefighterPro.getInstance().getBroadcaster().broadcastToFirefighters(Messages.format(Messages.INFO_HEADLINE_FIREFIGHTERS_ALL));
+		FirefighterPro.getInstance().getBroadcaster().broadcastToFirefighters(Messages.format(Messages.MISSION_ENDED));
 		// remove all firefighters from this mission, give them their inventory back
 		for(UUID id : firefightersInMission.keySet()) {
 			Player pl = Bukkit.getServer().getPlayer(id);

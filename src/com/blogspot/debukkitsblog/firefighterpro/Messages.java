@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Scanner;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 public enum Messages {
@@ -33,12 +32,14 @@ public enum Messages {
 	ERROR_IS_ALREADY_FIREFIGHTER,
 	ERROR_PLAYER_NOT_DISPATCHER,
 	ERROR_IS_ALREADY_DISPATCHER,
+	ERROR_INSURANCE_NOT_ENABLED,
 	ERROR_UNIT_ALREADY_EXISTS,
 	ERROR_VAULT_NOT_INSTALLED,
 	FIREFIGHTER_EQUIPPED,
 	FIREFIGHTER_RESPONDED,
 	FIREFIGHTER_QUIT_MISSION,
 	FIREFIGHTER_INVENTORY_RESTORED,
+	FIREFIGHTER_COMPENSATION_PAYEDOFF,
 	INFO_HEADLINE_DISPATCHERS,
 	INFO_HEADLINE_FIREFIGHTERS_ALL,
 	INFO_HEADLINE_FIREFIGHTERS_UNIT,
@@ -65,6 +66,7 @@ public enum Messages {
 	MANAGER_UNIT_REMOVED,
 	MANAGER_SALARIES_PAYED,
 	MISSION_ENDED,
+	SALARY_PAYEDOFF,
 	UI_HEADLINE,
 	UI_CALLING_CIVILIAN,
 	UI_DISPATCHER,
@@ -104,12 +106,14 @@ public enum Messages {
 		ERROR_IS_ALREADY_FIREFIGHTER.setMessage("This player is already member of the fire department.");
 		ERROR_PLAYER_NOT_DISPATCHER.setMessage("This player is not a dispatcher.");
 		ERROR_IS_ALREADY_DISPATCHER.setMessage("This player is already a dispatcher.");
+		ERROR_INSURANCE_NOT_ENABLED.setMessage("The insurance system is currently not enabled. Ask a server admin for help!");
 		ERROR_UNIT_ALREADY_EXISTS.setMessage("This unit already exists.");
 		ERROR_VAULT_NOT_INSTALLED.setMessage("Economy is not supported on this server. Plugin 'Vault' is missing.");
 		FIREFIGHTER_EQUIPPED.setMessage("You have been equipped with your most necessary equipment. You'll get your things back later using /ff quit");
 		FIREFIGHTER_RESPONDED.setMessage("has moved out and has approached the site");
 		FIREFIGHTER_QUIT_MISSION.setMessage("quit the mission and returned to base.");
 		FIREFIGHTER_INVENTORY_RESTORED.setMessage("You inventory has been restored.");
+		FIREFIGHTER_COMPENSATION_PAYEDOFF.setMessage("You just received your compensation for this mission. Thank you for helping another civilian in danger!");
 		INFO_HEADLINE_DISPATCHERS.setMessage("# Information message for all Dispatchers ++");
 		INFO_HEADLINE_FIREFIGHTERS_ALL.setMessage("# Information message for all Firefighters ++");
 		INFO_HEADLINE_FIREFIGHTERS_UNIT.setMessage("# Information message for firefighters in unit");
@@ -136,6 +140,7 @@ public enum Messages {
 		MANAGER_UNIT_REMOVED.setMessage("You removed the unit");
 		MANAGER_SALARIES_PAYED.setMessage("Salaries have been payed to firefighters and dispatchers. Total value:");
 		MISSION_ENDED.setMessage("The mission is finished, the place of deployment has been handed over to the owner.");
+		SALARY_PAYEDOFF.setMessage("You received your salary. Thank you for your work!");
 		UI_HEADLINE.setMessage(ChatColor.DARK_RED + "EMERGENCY MISSION");
 		UI_CALLING_CIVILIAN.setMessage("Calling Civilian");
 		UI_DISPATCHER.setMessage("Dispatcher");
@@ -156,7 +161,7 @@ public enum Messages {
 			content += key.name() + ": " + key.getMessage() + "\n";
 		}
 		
-		File langFile = new File(Bukkit.getPluginManager().getPlugin("FirefighterPro").getDataFolder() + java.io.File.separator + "messages.lang");
+		File langFile = new File(FirefighterPro.getInstance().getDataFolder() + java.io.File.separator + "messages.lang");
 		try {
 			// Check whether file already exists
 			if(!langFile.exists()) {

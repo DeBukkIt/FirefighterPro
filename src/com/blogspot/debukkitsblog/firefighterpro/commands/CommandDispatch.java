@@ -13,15 +13,11 @@ import com.blogspot.debukkitsblog.firefighterpro.Messages;
 
 public class CommandDispatch extends FFProCommand {
 	
-	public CommandDispatch(FirefighterPro plugin) {
-		super(plugin);
-	}
-	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		
 		// CASE 0: Currently no mission to dispatch units for
-		if(plugin.getCurrentMission() == null || plugin.getCurrentMission().isOver()) {
+		if(FirefighterPro.getInstance().getCurrentMission() == null || FirefighterPro.getInstance().getCurrentMission().isOver()) {
 			sender.sendMessage(Messages.format(Messages.ERROR_NO_MISSION_CURRENTLY_DISPATCH));
 			return true;
 		}
@@ -29,9 +25,9 @@ public class CommandDispatch extends FFProCommand {
 		// CASE 1: No argument: Dispatch using autodispatch mechanic
 		if(args.length == 0) {
 			// dispatch all firefighters
-			int resultAmount = plugin.getCurrentMission().dispatchAuto();
+			int resultAmount = FirefighterPro.getInstance().getCurrentMission().dispatchAuto();
 			// inform all dispatchers (including command sender)
-			plugin.getBroadcaster().broadcastToDispatchers(Messages.format(
+			FirefighterPro.getInstance().getBroadcaster().broadcastToDispatchers(Messages.format(
 					"[" + sender.getName() + "] " + ChatColor.GREEN + String.valueOf(resultAmount)
 					+ ChatColor.WHITE + " " + Messages.DISPATCH_UNITS_DISPATCHED
 			));
@@ -41,26 +37,26 @@ public class CommandDispatch extends FFProCommand {
 		// CASE 2: Multiple arguments
 		// -end indicates the end of the whole mission, aborting everything else
 		if(args[0].equalsIgnoreCase("-end")) {
-			plugin.getCurrentMission().end();
+			FirefighterPro.getInstance().getCurrentMission().end();
 			sender.sendMessage(Messages.format(Messages.MISSION_ENDED));
 			return true;
 		} else if(args[0].equalsIgnoreCase("-payoutInsurance")) {
 			// number of arguments correct
 			if(args.length == 2) {
 				// economy supported (Vault installed)
-				if(plugin.isEconomySupported()) {
+				if(FirefighterPro.getInstance().isEconomySupported()) {
 					// find target player
 					Player target = getPlayer(args[1]);
 					if(target != null) {
 						// is target player insured at all?
-						if(plugin.getInsurance().isInsured(target)) {
-							plugin.getInsurance().toCustomer(target).payoffSumInsured();
+						if(FirefighterPro.getInstance().getInsurance().isInsured(target)) {
+							FirefighterPro.getInstance().getInsurance().toCustomer(target).payoffSumInsured();
 							sender.sendMessage(Messages.format(Messages.INSURANCE_SUM_PAYED_OUT.getMessage()
 									.replaceAll("%p", target.getDisplayName())
-									.replaceAll("%a", String.valueOf(plugin.getInsurance().toCustomer(target).getSumInsured()))
+									.replaceAll("%a", String.valueOf(FirefighterPro.getInstance().getInsurance().toCustomer(target).getSumInsured()))
 							));
 							target.sendMessage(Messages.format(Messages.INSURANCE_SUM_RECEIVED.getMessage()
-									.replaceAll("%a", String.valueOf(plugin.getInsurance().toCustomer(target).getSumInsured()))
+									.replaceAll("%a", String.valueOf(FirefighterPro.getInstance().getInsurance().toCustomer(target).getSumInsured()))
 							));
 						} else {
 							sender.sendMessage(Messages.format(Messages.INSURANCE_TARGET_NOT_INSURED));
@@ -81,7 +77,7 @@ public class CommandDispatch extends FFProCommand {
 		for(int i = 0; i < args.length; i++) {			
 			// every argument is another unit, which should receive the alarm
 			if(!args[i].equalsIgnoreCase("-m")) {
-				if(!plugin.getFFConfig().unitExist(args[i])) {
+				if(!FirefighterPro.getInstance().getFFConfig().unitExist(args[i])) {
 					sender.sendMessage(Messages.format(ChatColor.RED + args[i] + ChatColor.WHITE + " " + Messages.ERROR_DISPATCH_UNIT_NOT_EXIST));
 					return false;
 				}
@@ -97,7 +93,7 @@ public class CommandDispatch extends FFProCommand {
 		}
 		// actual dispatch
 		for (String unitName : units) {
-			int resultAmount = plugin.getCurrentMission().dispatch(unitName, additionalMessage);
+			int resultAmount = FirefighterPro.getInstance().getCurrentMission().dispatch(unitName, additionalMessage);
 			sender.sendMessage(Messages.format(ChatColor.RED + unitName + ": " + ChatColor.GREEN + String.valueOf(resultAmount) + ChatColor.WHITE + " " + Messages.DISPATCH_UNITS_DISPATCHED));
 		}
 		

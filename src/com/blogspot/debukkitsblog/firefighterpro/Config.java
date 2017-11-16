@@ -14,22 +14,21 @@ import org.bukkit.inventory.ItemStack;
 
 public class Config {
 	
-	private final FirefighterPro plugin;
 	private FileConfiguration configData;
 	
-	public Config(FirefighterPro pPlugin) {
-		plugin = pPlugin;
-		
+	public Config() {		
 		// Loading (or creating the config file)
-		configData = plugin.getConfig();
-		if (!new File(plugin.getDataFolder() + File.separator + "config.yml").exists()) {
+		configData = FirefighterPro.getInstance().getConfig();
+		if (!new File(FirefighterPro.getInstance().getDataFolder() + File.separator + "config.yml").exists()) {
 			generateInitialConfiguration();
 		}
 	}
 
 	private void generateInitialConfiguration() {
 		configData.addDefault("firedepartment.name", "Mine City Volunteer Fire Co.");
-		configData.addDefault("firedepartment.location", plugin.getServer().getWorlds().get(0).getSpawnLocation());
+		configData.addDefault("firedepartment.location", FirefighterPro.getInstance().getServer().getWorlds().get(0).getSpawnLocation());
+		configData.addDefault("firedepartment.economy.enableInsurance", false);
+		configData.addDefault("firedepartment.economy.emergencyCallFee", 2.0);
 		configData.addDefault("firedepartment.economy.singleMissionCompensation", 25.0);
 		configData.addDefault("firedepartment.economy.salary.firefighters", 1800.0);
 		configData.addDefault("firedepartment.economy.salary.dispatchers", 1800.0);
@@ -50,7 +49,15 @@ public class Config {
 		configData.addDefault("firedepartment.units.ems-central.members", new ArrayList<String>());
 		
 		configData.options().copyDefaults(true);
-		plugin.saveConfig();
+		FirefighterPro.getInstance().saveConfig();
+	}
+	
+	public double getEmergencyCallFee() {
+		return configData.getDouble("firedepartment.economy.emergencyCallFee");
+	}
+	
+	public boolean isInsuranceEnabled() {
+		return configData.getBoolean("firedepartment.economy.enableInsurance", false);
 	}
 	
 	public double getSingleMissionCompensation() {
@@ -80,7 +87,7 @@ public class Config {
 	
 	public void setAutodispatch(boolean autodispatch) {
 		configData.set("firedepartment.dispatch.autoDispatch", autodispatch);
-		plugin.saveConfig();
+		FirefighterPro.getInstance().saveConfig();
 	}
 	
 	public boolean getAutodispatch() {
@@ -89,7 +96,7 @@ public class Config {
 	
 	public void setStationLocation(Location loc) {
 		configData.set("firedepartment.location", loc);
-		plugin.saveConfig();
+		FirefighterPro.getInstance().saveConfig();
 	}
 	
 	public Location getStationLocation() {
@@ -102,7 +109,7 @@ public class Config {
 		ArrayList<String> dispatcherIDs = (ArrayList<String>) configData.get("firedepartment.personnel.dispatchers");
 		if (dispatcherIDs != null) {
 			for (String id : dispatcherIDs) {
-				result.add(plugin.getServer().getPlayer(UUID.fromString(id)));
+				result.add(FirefighterPro.getInstance().getServer().getPlayer(UUID.fromString(id)));
 			}
 		}
 		return result;
@@ -119,7 +126,7 @@ public class Config {
 		ArrayList<String> firefighterIDs = (ArrayList<String>) configData.get("firedepartment.personnel.members");
 		if (firefighterIDs != null) {
 			for (String id : firefighterIDs) {
-				result.add(plugin.getServer().getPlayer(UUID.fromString(id)));
+				result.add(FirefighterPro.getInstance().getServer().getPlayer(UUID.fromString(id)));
 			}
 		}
 		return result;
@@ -136,7 +143,7 @@ public class Config {
 		ArrayList<String> firefighterIDs = (ArrayList<String>) configData.get("firedepartment.units." + unitName + ".members");
 		if (firefighterIDs != null) {
 			for (String id : firefighterIDs) {
-				result.add(plugin.getServer().getPlayer(UUID.fromString(id)));
+				result.add(FirefighterPro.getInstance().getServer().getPlayer(UUID.fromString(id)));
 			}
 		}
 		return result;
@@ -153,7 +160,7 @@ public class Config {
 			if(UUID.fromString(id).equals(p.getUniqueId())) {
 				ffs.remove(id);
 				configData.set("firedepartment.personnel.members", ffs);
-				plugin.saveConfig();
+				FirefighterPro.getInstance().saveConfig();
 				return;
 			}
 		}
@@ -163,7 +170,7 @@ public class Config {
 		List<String> ffs = getFirefightersUUIDStrings();
 		ffs.add(p.getUniqueId().toString());
 		configData.set("firedepartment.personnel.members", ffs);
-		plugin.saveConfig();
+		FirefighterPro.getInstance().saveConfig();
 	}
 	
 	public void removeDispatcher(Player p) {
@@ -172,7 +179,7 @@ public class Config {
 			if(UUID.fromString(id).equals(p.getUniqueId())) {
 				dps.remove(id);
 				configData.set("firedepartment.personnel.dispatchers", dps);
-				plugin.saveConfig();
+				FirefighterPro.getInstance().saveConfig();
 				return;
 			}
 		}
@@ -182,7 +189,7 @@ public class Config {
 		List<String> dps = getDispatchersUUIDStrings();
 		dps.add(p.getUniqueId().toString());
 		configData.set("firedepartment.personnel.dispatchers", dps);
-		plugin.saveConfig();
+		FirefighterPro.getInstance().saveConfig();
 	}
 	
 	public boolean isFirefighter(Player p) {
@@ -218,7 +225,7 @@ public class Config {
 			if(UUID.fromString(id).equals(p.getUniqueId())) {
 				ffs.remove(id);
 				configData.set("firedepartment.units." + unitName + ".members", ffs);
-				plugin.saveConfig();
+				FirefighterPro.getInstance().saveConfig();
 				return;
 			}
 		}
@@ -229,14 +236,14 @@ public class Config {
 		if (ffs != null) {
 			ffs.add(p.getUniqueId().toString());
 			configData.set("firedepartment.units." + unitName + ".members", ffs);
-			plugin.saveConfig();
+			FirefighterPro.getInstance().saveConfig();
 		}
 	}
 	
 	public void addUnit(String unitName, String unitDisplayName) {
 		configData.set("firedepartment.units." + unitName + ".name", unitDisplayName);
 		configData.set("firedepartment.units." + unitName + ".members", new ArrayList<Player>());
-		plugin.saveConfig();
+		FirefighterPro.getInstance().saveConfig();
 	}
 	
 	public String getUnitDisplayName(String unitName) {
@@ -247,7 +254,7 @@ public class Config {
 		configData.set("firedepartment.units." + unitName + ".name", null);
 		configData.set("firedepartment.units." + unitName + ".members", null);
 		configData.set("firedepartment.units." + unitName, null);
-		plugin.saveConfig();
+		FirefighterPro.getInstance().saveConfig();
 	}	
 	
 	public boolean unitExist(String unitName) {

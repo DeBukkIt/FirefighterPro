@@ -15,7 +15,7 @@ commands:
      ff:
           description: Allows firefighters to respond to calls
           permission: ffpro.firefighter
-          usage: /<command> <roger|equip|respond|quit|info>
+          usage: /<command> (roger|equip|respond|quit|info) | (list (firefighters|dispatchers|insurancecustomers))
      ffmanage:
           description: Manages a fire department
           permission: ffpro.manager

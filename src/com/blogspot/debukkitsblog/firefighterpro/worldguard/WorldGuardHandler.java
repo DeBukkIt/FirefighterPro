@@ -22,13 +22,11 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class WorldGuardHandler {
 	
-	private final FirefighterPro plugin;
 	private Plugin worldguard;
 	
-	public WorldGuardHandler(FirefighterPro plugin) {
-		this.plugin = plugin;
+	public WorldGuardHandler() {
 		try {
-			worldguard = plugin.getServer().getPluginManager().getPlugin("WorldGuard");
+			worldguard = FirefighterPro.getInstance().getServer().getPluginManager().getPlugin("WorldGuard");
 		} catch(NoClassDefFoundError ex) {
 			System.err.println("WorldGuard not found, working without WorldGuard support.");
 		}		
@@ -87,7 +85,10 @@ public class WorldGuardHandler {
 	
 	public void setAllowBuild(Location loc, Mission mission) {
 		ProtectedRegion region = getLowestLevelRegion(loc);
-		List<Player> allFirefighters = plugin.getFFConfig().getFirefighters();
+		if(region == null) {
+			return;
+		}
+		List<Player> allFirefighters = FirefighterPro.getInstance().getFFConfig().getFirefighters();
 		DefaultDomain regionMembers = region.getMembers();
 		
 		mission.setRegion(region);
@@ -99,16 +100,19 @@ public class WorldGuardHandler {
 		region.setMembers(regionMembers);
 		
 		saveRegionChanges(loc.getWorld());
-		System.out.println(Messages.format("All firefighters are members of region " + region.getId() + " for the running mission."));
+		System.out.println("All firefighters are members of region " + region.getId() + " for the running mission.");
 	}
 	
 	public void setOldBuildPermissions(Location loc, Mission mission) {
 		ProtectedRegion region = mission.getRegion();
+		if(region == null) {
+			return;
+		}
 		if(mission.getRegionOldMembers() != null) {
 			region.getMembers().setPlayerDomain(mission.getRegionOldMembers().get());
 			saveRegionChanges(loc.getWorld());
 		}
-		System.out.println(Messages.format("Members of region " + region.getId() + " reset after mission ended."));
+		System.out.println("Members of region " + region.getId() + " reset after mission ended.");
 	}
 	
 	private void saveRegionChanges(World world) {

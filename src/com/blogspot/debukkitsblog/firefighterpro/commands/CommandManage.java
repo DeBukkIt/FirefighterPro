@@ -9,10 +9,6 @@ import com.blogspot.debukkitsblog.firefighterpro.FirefighterPro;
 import com.blogspot.debukkitsblog.firefighterpro.Messages;
 
 public class CommandManage extends FFProCommand {
-	
-	public CommandManage(FirefighterPro plugin) {
-		super(plugin);
-	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -34,11 +30,11 @@ public class CommandManage extends FFProCommand {
 			if(player != null) {
 				// apply changes to config, confirm to command sender
 				Location location = player.getLocation();
-				plugin.getFFConfig().setStationLocation(location);
+				FirefighterPro.getInstance().getFFConfig().setStationLocation(location);
 				player.sendMessage(Messages.format(Messages.MANAGER_FIRESTATION_LOCATION_SET));
 				// inform all firefighters
-				plugin.getBroadcaster().broadcastToFirefighters(Messages.format(Messages.INFO_HEADLINE_FIREFIGHTERS_ALL));
-				plugin.getBroadcaster().broadcastToFirefighters(Messages.format(Messages.MANAGER_FIRESTATION_LOCATION_SET_FOR_FIREFIGHTERS + " " + location.getWorld().getName() + ", (" + location.getBlockX() + "|" + location.getBlockY() + "|" + location.getBlockZ() + ")"));
+				FirefighterPro.getInstance().getBroadcaster().broadcastToFirefighters(Messages.format(Messages.INFO_HEADLINE_FIREFIGHTERS_ALL));
+				FirefighterPro.getInstance().getBroadcaster().broadcastToFirefighters(Messages.format(Messages.MANAGER_FIRESTATION_LOCATION_SET_FOR_FIREFIGHTERS + " " + location.getWorld().getName() + ", (" + location.getBlockX() + "|" + location.getBlockY() + "|" + location.getBlockZ() + ")"));
 			} else {
 				sender.sendMessage(Messages.format(Messages.ERROR_COMMAND_NO_CONSOLE));
 			}
@@ -47,11 +43,11 @@ public class CommandManage extends FFProCommand {
 		} else if(args[0].equalsIgnoreCase("setAutodispatch")) {
 			if(args.length >= 2 && (args[1].equalsIgnoreCase("false") || args[1].equalsIgnoreCase("true"))) {
 				// apply changes to config, confirm to command sender
-				plugin.getFFConfig().setAutodispatch(Boolean.valueOf(args[1]));
+				FirefighterPro.getInstance().getFFConfig().setAutodispatch(Boolean.valueOf(args[1]));
 				sender.sendMessage(Messages.format(Boolean.valueOf(args[1]) ? Messages.MANAGER_AUTODISPATCH_ON : Messages.MANAGER_AUTODISPATCH_OFF));
 				// inform all dispatchers
-				plugin.getBroadcaster().broadcastToDispatchers(Messages.format(Messages.INFO_HEADLINE_DISPATCHERS));
-				plugin.getBroadcaster().broadcastToDispatchers(Messages.format(Boolean.valueOf(args[1]) ? Messages.MANAGER_AUTODISPATCH_ON : Messages.MANAGER_AUTODISPATCH_OFF));
+				FirefighterPro.getInstance().getBroadcaster().broadcastToDispatchers(Messages.format(Messages.INFO_HEADLINE_DISPATCHERS));
+				FirefighterPro.getInstance().getBroadcaster().broadcastToDispatchers(Messages.format(Boolean.valueOf(args[1]) ? Messages.MANAGER_AUTODISPATCH_ON : Messages.MANAGER_AUTODISPATCH_OFF));
 			} else {
 				return false;
 			}			
@@ -60,9 +56,9 @@ public class CommandManage extends FFProCommand {
 			if (args.length == 3) {				
 				Player p = getPlayer(args[1]);
 				if (p != null) {
-					if (plugin.getFFConfig().isFirefighter(p)) {
-						if (plugin.getFFConfig().unitExist(args[2])) {
-							plugin.getFFConfig().addToUnit(p, args[2]);
+					if (FirefighterPro.getInstance().getFFConfig().isFirefighter(p)) {
+						if (FirefighterPro.getInstance().getFFConfig().unitExist(args[2])) {
+							FirefighterPro.getInstance().getFFConfig().addToUnit(p, args[2]);
 							sender.sendMessage(Messages.format(args[1] + " " + Messages.MANAGER_PLAYER_ASSIGNED_TO_UNIT + " " + args[2]));
 							p.sendMessage(Messages.format(Messages.YOU_HAVE_BEEN_ASSIGNED_TO_UNIT + " " + args[2]));
 						} else {
@@ -82,9 +78,9 @@ public class CommandManage extends FFProCommand {
 			if (args.length == 3) {
 				Player p = getPlayer(args[1]);
 				if (p != null) {
-					if (plugin.getFFConfig().unitExist(args[2])) {
-						if (plugin.getFFConfig().isMemberOfUnit(p, args[2])) {
-							plugin.getFFConfig().removeFromUnit(p, args[2]);
+					if (FirefighterPro.getInstance().getFFConfig().unitExist(args[2])) {
+						if (FirefighterPro.getInstance().getFFConfig().isMemberOfUnit(p, args[2])) {
+							FirefighterPro.getInstance().getFFConfig().removeFromUnit(p, args[2]);
 							sender.sendMessage(Messages.format(args[1] + " " + Messages.MANAGER_PLAYER_REMOVED_FROM_UNIT + " " + args[2]));
 							p.sendMessage(Messages.format(Messages.YOU_HAVE_BEEN_REMOVED_FROM_UNIT + " " + args[2]));
 						} else {
@@ -104,8 +100,8 @@ public class CommandManage extends FFProCommand {
 			if(args.length == 2) {
 				Player p = getPlayer(args[1]);
 				if(p != null) {
-					if(!plugin.getFFConfig().isFirefighter(p)) {
-						plugin.getFFConfig().addFirefighter(p);
+					if(!FirefighterPro.getInstance().getFFConfig().isFirefighter(p)) {
+						FirefighterPro.getInstance().getFFConfig().addFirefighter(p);
 						sender.sendMessage(Messages.format(args[1] + " " + Messages.MANAGER_ADDED_FIREFIGHTER));
 						p.sendMessage(Messages.format(Messages.YOU_ARE_A_FIREFIGHTER));
 					} else {
@@ -122,8 +118,8 @@ public class CommandManage extends FFProCommand {
 			if(args.length == 2) {
 				Player p = getPlayer(args[1]);
 				if(p != null) {
-					if(plugin.getFFConfig().isFirefighter(p)) {
-						plugin.getFFConfig().removeFirefighter(p);
+					if(FirefighterPro.getInstance().getFFConfig().isFirefighter(p)) {
+						FirefighterPro.getInstance().getFFConfig().removeFirefighter(p);
 						sender.sendMessage(Messages.format(args[1] + " " + Messages.MANAGER_REMOVED_FIREFIGHTER));
 						p.sendMessage(Messages.format(Messages.YOU_ARE_NO_LONGER_A_FIREFIGHTER));
 					} else {
@@ -140,8 +136,8 @@ public class CommandManage extends FFProCommand {
 			if(args.length == 2) {
 				Player p = getPlayer(args[1]);
 				if(p != null) {
-					if(!plugin.getFFConfig().isDispatcher(p)) {
-						plugin.getFFConfig().addDispatcher(p);
+					if(!FirefighterPro.getInstance().getFFConfig().isDispatcher(p)) {
+						FirefighterPro.getInstance().getFFConfig().addDispatcher(p);
 						sender.sendMessage(Messages.format(args[1] + " " + Messages.MANAGER_ADDED_DISPATCHER));
 						p.sendMessage(Messages.format(Messages.YOU_ARE_A_DISAPTCHER));
 					} else {
@@ -158,8 +154,8 @@ public class CommandManage extends FFProCommand {
 			if(args.length == 2) {
 				Player p = getPlayer(args[1]);
 				if(p != null) {
-					if(plugin.getFFConfig().isDispatcher(p)) {
-						plugin.getFFConfig().removeDispatcher(p);
+					if(FirefighterPro.getInstance().getFFConfig().isDispatcher(p)) {
+						FirefighterPro.getInstance().getFFConfig().removeDispatcher(p);
 						sender.sendMessage(Messages.format(args[1] + " " + Messages.MANAGER_REMOVED_DISPATCHER));
 						p.sendMessage(Messages.format(Messages.YOU_ARE_NO_LONGER_A_DISPATCHER));
 					} else {
@@ -174,13 +170,13 @@ public class CommandManage extends FFProCommand {
 		} else if(args[0].equalsIgnoreCase("unitAdd")) {
 			// add a new unit
 			if(args.length > 2) {
-				if(!plugin.getFFConfig().unitExist(args[1])) {
+				if(!FirefighterPro.getInstance().getFFConfig().unitExist(args[1])) {
 					// collect unit name from further arguments
 					String unitDisplayName = "";
 					for(int i = 2; i < args.length; i++) {
 						unitDisplayName += args[i] + " ";
 					}					
-					plugin.getFFConfig().addUnit(args[1], unitDisplayName.trim());
+					FirefighterPro.getInstance().getFFConfig().addUnit(args[1], unitDisplayName.trim());
 					sender.sendMessage(Messages.format(Messages.MANAGER_UNIT_ADDED + " " + args[1] + " ('" + unitDisplayName + "')"));
 				} else  {
 					sender.sendMessage(Messages.format(Messages.ERROR_UNIT_ALREADY_EXISTS));
@@ -191,8 +187,8 @@ public class CommandManage extends FFProCommand {
 		} else if(args[0].equalsIgnoreCase("unitRemove")) {
 			// remove a unit
 			if(args.length == 2) {
-				if(plugin.getFFConfig().unitExist(args[1])) {
-					plugin.getFFConfig().removeUnit(args[1]);
+				if(FirefighterPro.getInstance().getFFConfig().unitExist(args[1])) {
+					FirefighterPro.getInstance().getFFConfig().removeUnit(args[1]);
 					sender.sendMessage(Messages.format(Messages.MANAGER_UNIT_REMOVED + " " + args[1]));
 				} else {
 					sender.sendMessage(Messages.format(Messages.ERROR_UNIT_NOT_EXIST));
@@ -200,21 +196,37 @@ public class CommandManage extends FFProCommand {
 			} else {
 				return false;
 			}
-		} else if(args[0].equalsIgnoreCase("paySalaries")) {
-			if(plugin.isEconomySupported()) {
-				double firefightersSalary = plugin.getFFConfig().getSalaryFirefighters();
-				double dispatchersSalary = plugin.getFFConfig().getSalaryDispatchers();
-				for(Player firefighter : plugin.getFFConfig().getFirefighters()) {
-					plugin.getEconomy().depositPlayer(firefighter, firefightersSalary);
+		} else if(args[0].equalsIgnoreCase("paySalaries")) {	
+			// insurance enabled?
+			if(FirefighterPro.getInstance().getFFConfig().isInsuranceEnabled()) {
+				// economy supported (Vault installed)?
+				if(FirefighterPro.getInstance().isEconomySupported()) {
+					// read configurated salaries
+					double firefightersSalary = FirefighterPro.getInstance().getFFConfig().getSalaryFirefighters();
+					double dispatchersSalary = FirefighterPro.getInstance().getFFConfig().getSalaryDispatchers();
+					// pay firefighters
+					for(Player firefighter : FirefighterPro.getInstance().getFFConfig().getFirefighters()) {
+						if(!FirefighterPro.getInstance().getEconomy().deposit(firefighter, firefightersSalary)) {
+							break;
+						}
+						firefighter.sendMessage(Messages.format(Messages.SALARY_PAYEDOFF));
+					}
+					// pay dispatchers
+					for(Player dispatcher : FirefighterPro.getInstance().getFFConfig().getDispatchers()) {
+						if(!FirefighterPro.getInstance().getEconomy().deposit(dispatcher, dispatchersSalary)) {
+							break;
+						}
+						dispatcher.sendMessage(Messages.format(Messages.SALARY_PAYEDOFF));
+					}
+					// send result to command sender
+					double totalSalary = 	FirefighterPro.getInstance().getFFConfig().getFirefighters().size() * firefightersSalary
+											+ FirefighterPro.getInstance().getFFConfig().getDispatchers().size() * dispatchersSalary;
+					sender.sendMessage(Messages.format(Messages.MANAGER_SALARIES_PAYED + " " + String.valueOf(Math.round(totalSalary))));
+				} else {
+					sender.sendMessage(Messages.format(Messages.ERROR_VAULT_NOT_INSTALLED));
 				}
-				for(Player dispatcher : plugin.getFFConfig().getDispatchers()) {
-					plugin.getEconomy().depositPlayer(dispatcher, dispatchersSalary);
-				}
-				double totalSalary = 	plugin.getFFConfig().getFirefighters().size() * firefightersSalary
-										+ plugin.getFFConfig().getDispatchers().size() * dispatchersSalary;
-				sender.sendMessage(Messages.format(Messages.MANAGER_SALARIES_PAYED + " " + String.valueOf(Math.round(totalSalary))));
 			} else {
-				sender.sendMessage(Messages.format(Messages.ERROR_VAULT_NOT_INSTALLED));
+				sender.sendMessage(Messages.format(Messages.ERROR_INSURANCE_NOT_ENABLED));
 			}
 		}
 		

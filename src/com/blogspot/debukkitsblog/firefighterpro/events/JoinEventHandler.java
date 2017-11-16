@@ -6,22 +6,22 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.blogspot.debukkitsblog.firefighterpro.FirefighterPro;
-import com.blogspot.debukkitsblog.firefighterpro.Messages;
+import com.blogspot.debukkitsblog.firefighterpro.economy.Insurance;
 
 public class JoinEventHandler implements Listener {
-	
-	private final FirefighterPro plugin;
-	
-	public JoinEventHandler(FirefighterPro plugin) {
-		this.plugin = plugin;
-	}
 	
 	@EventHandler(priority=EventPriority.LOWEST)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		// withdraw insurance installment if player is insured
-		if(plugin.isEconomySupported() && plugin.getInsurance().isInsured(event.getPlayer())) {
-			plugin.getInsurance().toCustomer(event.getPlayer()).payInstallment();
-			event.getPlayer().sendMessage(Messages.format(Messages.INSURANCE_PAYED));
+		// economy supported?
+		if(FirefighterPro.getInstance().isEconomySupported()) {
+			// get insurance system
+			Insurance insurance = FirefighterPro.getInstance().getInsurance();
+			// player insured?
+			if(insurance.isInsured(event.getPlayer())) {
+				// let him pay (and do not ask first, muhaha!)
+				insurance.toCustomer(event.getPlayer()).payInstallment();
+			}
 		}
 	}
 

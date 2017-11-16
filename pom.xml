@@ -2,29 +2,55 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.blogspot.debukkitsblog</groupId>
   <artifactId>FirefighterPro</artifactId>
-  <version>1.0.0</version>
+  <version>2.0.0</version>
   <name>FirefighterPro</name>
   <description>Bukkit plugin providing features for fire departments on Minecraft servers</description>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <build>
+	<finalName>FirefighterPro-src</finalName>
     <sourceDirectory>src</sourceDirectory>
     <resources>
       <resource>
+		<targetPath>.</targetPath>
+		<filtering>true</filtering>
         <directory>src</directory>
+		<includes>
+		  <include>plugin.yml</include>
+		</includes>
         <excludes>
           <exclude>**/*.java</exclude>
         </excludes>
       </resource>
     </resources>
     <plugins>
+	  <!-- Compil with Java 8 -->
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.7.0</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
+        </configuration>
+      </plugin>
+	  <!-- Package Dependencies into JAR -->
+	  <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+		  <finalName>FirefighterPro</finalName>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+		  <appendAssemblyId>false</appendAssemblyId>
         </configuration>
       </plugin>
     </plugins>
@@ -52,26 +78,31 @@
   		<groupId>org.bukkit</groupId>
   		<artifactId>bukkit</artifactId>
   		<version>1.12.2-R0.1-SNAPSHOT</version>
+  		<scope>provided</scope>
   	</dependency>
   	<dependency>
   		<groupId>com.sk89q.worldedit</groupId>
   		<artifactId>worldedit-core</artifactId>
   		<version>6.1.4-SNAPSHOT</version>
+  		<scope>provided</scope>
   	</dependency>
   	<dependency>
   		<groupId>com.sk89q.worldguard</groupId>
   		<artifactId>worldguard-legacy</artifactId>
   		<version>6.2</version>
+  		<scope>provided</scope>
   	</dependency>
   	<dependency>
   		<groupId>net.milkbowl.vault</groupId>
   		<artifactId>VaultAPI</artifactId>
   		<version>1.6</version>
+  		<scope>provided</scope>
   	</dependency>
   	<dependency>
 	    <groupId>com.github.DeBukkIt</groupId>
 	    <artifactId>SimpleFileStorage</artifactId>
 	    <version>master-SNAPSHOT</version>
+  		<scope>compile</scope>
 	</dependency>
   </dependencies>
   <url>https://dev.bukkit.org/projects/firefighterpro</url>

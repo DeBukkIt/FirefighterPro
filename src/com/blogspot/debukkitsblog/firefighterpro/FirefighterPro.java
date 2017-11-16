@@ -1,16 +1,21 @@
 package com.blogspot.debukkitsblog.firefighterpro;
 
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.blogspot.debukkitsblog.firefighterpro.commands.*;
+import com.blogspot.debukkitsblog.firefighterpro.commands.CommandAlarm;
+import com.blogspot.debukkitsblog.firefighterpro.commands.CommandDispatch;
+import com.blogspot.debukkitsblog.firefighterpro.commands.CommandFF;
+import com.blogspot.debukkitsblog.firefighterpro.commands.CommandInsurance;
+import com.blogspot.debukkitsblog.firefighterpro.commands.CommandManage;
+import com.blogspot.debukkitsblog.firefighterpro.economy.Economy;
+import com.blogspot.debukkitsblog.firefighterpro.economy.Insurance;
+import com.blogspot.debukkitsblog.firefighterpro.events.JoinEventHandler;
 import com.blogspot.debukkitsblog.firefighterpro.events.SignEventHandler;
-import com.blogspot.debukkitsblog.firefighterpro.insurance.Insurance;
 import com.blogspot.debukkitsblog.firefighterpro.worldguard.WorldGuardHandler;
 
-import net.milkbowl.vault.economy.Economy;
-
 public class FirefighterPro extends JavaPlugin {
+	
+	private static FirefighterPro instance;
 	
 	private Mission currentMission;
 	private Config config;
@@ -23,23 +28,24 @@ public class FirefighterPro extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		super.onEnable();
+		instance = this;
+		
 		currentMission = null;
-		config = new Config(this);
-		broadcaster = new Broadcaster(this);
+		config = new Config();
+		broadcaster = new Broadcaster();
 		Messages.initMessages();
 		
-		getServer().getPluginManager().registerEvents(new SignEventHandler(this), this);
+		registerEventListeners();
 		registerCommandExecutors();
 		
 		try {
-			worldGuardHandler = new WorldGuardHandler(this);
+			worldGuardHandler = new WorldGuardHandler();
 		} catch(NoClassDefFoundError e) {
 			System.out.println("WorldGuard not found, working without WorldGuard support.");
 		}
 		
-		setupEconomy();
-		if(isEconomySupported()) {
-			insurance = new Insurance(this);
+		if(setupEconomy()) {
+			insurance = new Insurance();
 		} else {
 			System.out.println("Could not enable economy system, fire insurance and payment disabled.");
 		}
@@ -50,25 +56,22 @@ public class FirefighterPro extends JavaPlugin {
 		super.onDisable();
 	}
 	
+	private void registerEventListeners() {
+		getServer().getPluginManager().registerEvents(new JoinEventHandler(), this);
+		getServer().getPluginManager().registerEvents(new SignEventHandler(), this);
+	}
+	
 	private void registerCommandExecutors() {
-		getCommand("alarm").setExecutor(new CommandAlarm(this));
-		getCommand("ff").setExecutor(new CommandFF(this));
-		getCommand("ffdispatch").setExecutor(new CommandDispatch(this));
-		getCommand("ffmanage").setExecutor(new CommandManage(this));
-		getCommand("ffinsurance").setExecutor(new CommandInsurance(this));
+		getCommand("alarm").setExecutor(new CommandAlarm());
+		getCommand("ff").setExecutor(new CommandFF());
+		getCommand("ffdispatch").setExecutor(new CommandDispatch());
+		getCommand("ffmanage").setExecutor(new CommandManage());
+		getCommand("ffinsurance").setExecutor(new CommandInsurance());
 	}
 	
 	private boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            return false;
-        }
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
-            return false;
-        }
-        econ = rsp.getProvider();
-        
-        return econ != null;
+        econ = new Economy();
+        return econ.isAvailable();
     }
 	
 	public Broadcaster getBroadcaster() {
@@ -92,7 +95,7 @@ public class FirefighterPro extends JavaPlugin {
 	}
 	
 	public boolean isEconomySupported() {
-		return econ != null;
+		return econ.isAvailable();
 	}
 	
 	public Economy getEconomy() {
@@ -105,6 +108,10 @@ public class FirefighterPro extends JavaPlugin {
 	
 	public WorldGuardHandler getWorldGuardHandler() {
 		return worldGuardHandler;
+	}
+	
+	public static FirefighterPro getInstance() {
+		return instance;
 	}
 	
 }

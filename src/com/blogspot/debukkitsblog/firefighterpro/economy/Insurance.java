@@ -1,4 +1,4 @@
-package com.blogspot.debukkitsblog.firefighterpro.insurance;
+package com.blogspot.debukkitsblog.firefighterpro.economy;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,11 +16,11 @@ public class Insurance {
 	private FileStorage db;
 
 	@SuppressWarnings("unchecked")
-	public Insurance(FirefighterPro plugin) {
+	public Insurance() {
 		try {
 
 			// Load customers from database file
-			db = new FileStorage(new File(plugin.getDataFolder().getAbsolutePath() + File.separator + "insurance.dat"));
+			db = new FileStorage(new File(FirefighterPro.getInstance().getDataFolder().getAbsolutePath() + File.separator + "insurance.dat"));
 			if (db.hasKey("customers")) {
 				customers = (List<InsuranceCustomer>) db.get("customers");
 			} else {
@@ -64,6 +64,10 @@ public class Insurance {
 			}
 		}
 		return null;
+	}
+	
+	public List<InsuranceCustomer> getCustomers() {
+		return customers;
 	}
 	
 	private void save() {
