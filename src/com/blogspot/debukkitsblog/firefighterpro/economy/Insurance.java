@@ -71,7 +71,11 @@ public class Insurance {
 	}
 	
 	private void save() {
-		db.store("customers", customers);
+		try {
+			db.store("customers", customers);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

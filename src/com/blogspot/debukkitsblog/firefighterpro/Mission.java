@@ -186,7 +186,7 @@ public class Mission {
 		isOver = true;
 		// Deny firefighters to build in the emergency's region, reset old members
 		if(FirefighterPro.getInstance().isWorldGuardSupported()) {
-			FirefighterPro.getInstance().getWorldGuardHandler().setOldBuildPermissions(location, this);
+			FirefighterPro.getInstance().getWorldGuardHandler().restorePreviousBuildPermissions(location, this);
 		}
 		// send end message to every firefighter and dispatcher
 		FirefighterPro.getInstance().getBroadcaster().broadcastToDispatchers(Messages.format(Messages.INFO_HEADLINE_DISPATCHERS));
