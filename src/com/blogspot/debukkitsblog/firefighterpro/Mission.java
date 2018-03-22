@@ -174,10 +174,9 @@ public class Mission {
 	}
 	
 	private void payCompensation(Player p) {
-		if(FirefighterPro.getInstance().isEconomySupported()) {
-			if(FirefighterPro.getInstance().getEconomy().deposit(p, FirefighterPro.getInstance().getFFConfig().getSingleMissionCompensation())) {
-				p.sendMessage(Messages.format(Messages.FIREFIGHTER_COMPENSATION_PAYEDOFF));
-			}
+		if (FirefighterPro.getInstance().isEconomySupported() && FirefighterPro.getInstance().getEconomy().deposit(p,
+				FirefighterPro.getInstance().getFFConfig().getSingleMissionCompensation())) {
+			p.sendMessage(Messages.format(Messages.FIREFIGHTER_COMPENSATION_PAYEDOFF));
 		}
 	}
 	

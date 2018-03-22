@@ -101,13 +101,9 @@ public class SignEventHandler implements Listener {
 				for(int z = (blockZ-1); z <= (blockZ+1); z++) {					
 					// get every sign in the nearest environment
 					Block target = block.getWorld().getBlockAt(x, y, z);					
-					if(isSign(target)) {
-						// if its a FirefighterPro command sign, dispatch its command
-						if(isCommandSign((Sign) target.getState())) {
-							if(event.getNewCurrent() > event.getOldCurrent()) {
-								onSignClicked(new PlayerInteractEvent(findRedstoneSourcePlayer(target), null, null, target, null));
-							}
-						}
+					// if its a FirefighterPro command sign, dispatch its command
+					if(isSign(target) && isCommandSign((Sign) target.getState()) && event.getNewCurrent() > event.getOldCurrent()) {
+						onSignClicked(new PlayerInteractEvent(findRedstoneSourcePlayer(target), null, null, target, null));
 					}
 					
 				}
@@ -140,7 +136,7 @@ public class SignEventHandler implements Listener {
 					
 					Block target = block.getWorld().getBlockAt(x, y, z);
 					// recursive search for the next redstone block between target and firing player
-					if(isRedstoneBlock(target) && target != block && !checkedRedstoneBlocks.contains(target)) {
+					if(isRedstoneBlock(target) && !target.equals(block) && !checkedRedstoneBlocks.contains(target)) {
 						Player result = findRedstoneSourcePlayer(target);
 						if(result != null)
 							return result;

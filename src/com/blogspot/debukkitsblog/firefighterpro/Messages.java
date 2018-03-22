@@ -161,7 +161,7 @@ public enum Messages {
 			content += key.name() + ": " + key.getMessage() + "\n";
 		}
 		
-		File langFile = new File(FirefighterPro.getInstance().getDataFolder() + java.io.File.separator + "messages.lang");
+		File langFile = new File(FirefighterPro.getInstance().getDataFolder() + File.separator + "messages.lang");
 		try {
 			// Check whether file already exists
 			if(!langFile.exists()) {
@@ -182,7 +182,7 @@ public enum Messages {
 					// ignore empty or comment lines
 					if(line != null && !line.isEmpty() && !line.startsWith("###")) {
 						// split lines at ': '
-						if(line.contains(": "))					 {
+						if(line.contains(": ")) {
 							String[] parts = line.split(": ");
 							// filter lines where more or less than 2 ': ' were found
 							if(parts != null && parts.length == 2) {

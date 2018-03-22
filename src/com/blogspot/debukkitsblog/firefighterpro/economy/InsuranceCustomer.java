@@ -48,13 +48,11 @@ public class InsuranceCustomer implements Serializable {
 	}
 	
 	public void payInstallment() {		
-		if(FirefighterPro.getInstance().isEconomySupported() && getDaysToNextPayday() <= 0) {
-			if (FirefighterPro.getInstance().getEconomy().withdraw(Bukkit.getServer().getPlayer(playerID), installment)) {
+		if(FirefighterPro.getInstance().isEconomySupported() && getDaysToNextPayday() <= 0 && FirefighterPro.getInstance().getEconomy().withdraw(Bukkit.getServer().getPlayer(playerID), installment)) {
 				nextPayday += daysToMillis(dayInterval);
 				Bukkit.getPlayer(playerID).sendMessage(Messages.format(Messages.INSURANCE_PAYED)
 						.replaceAll("%d", String.valueOf(getDaysToNextPayday())
 				));
-			}
 		}
 	}
 	
